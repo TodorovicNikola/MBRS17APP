@@ -43,26 +43,26 @@ namespace WebApplication1.Migrations
                         Poslovna_godina_ID = c.Int(nullable: false),
                     })
                 .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.Magacins", t => t.Magacin_ID)
+                .ForeignKey("dbo.Roba", t => t.Roba_ID)
                 .ForeignKey("dbo.Poslovna_godina", t => t.Poslovna_godina_ID)
-                .ForeignKey("dbo.Robas", t => t.Roba_ID)
+                .ForeignKey("dbo.Magacin", t => t.Magacin_ID)
                 .Index(t => t.Roba_ID)
                 .Index(t => t.Magacin_ID)
                 .Index(t => t.Poslovna_godina_ID);
             
             CreateTable(
-                "dbo.Magacins",
+                "dbo.Magacin",
                 c => new
                     {
                         Id = c.Int(nullable: false, identity: true),
-                        Naziv = c.String(),
+                        Naziv = c.String(maxLength: 128, unicode: false),
                         Adresa = c.String(maxLength: 128, unicode: false),
                         Preduzece_ID = c.Int(nullable: false),
                         Mesto_ID = c.Int(nullable: false),
                     })
                 .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.Mestoes", t => t.Mesto_ID)
-                .ForeignKey("dbo.Preduzeces", t => t.Preduzece_ID)
+                .ForeignKey("dbo.Mesto", t => t.Mesto_ID)
+                .ForeignKey("dbo.Preduzece", t => t.Preduzece_ID)
                 .Index(t => t.Adresa)
                 .Index(t => t.Preduzece_ID)
                 .Index(t => t.Mesto_ID);
@@ -79,19 +79,16 @@ namespace WebApplication1.Migrations
                         Ukupna_vrednost = c.Double(nullable: false),
                         Transportni_troskovi = c.Double(nullable: false),
                         Zavisni_troskovi = c.Double(nullable: false),
-                        Stavka_dokumenta_ID = c.Int(nullable: false),
-                        MagacinUDokumentu_ID = c.Int(nullable: false),
-                        MagacinKomPripada_ID = c.Int(nullable: false),
+                        Pripada_magacinu_ID = c.Int(nullable: false),
+                        Magacin_u_dokumentu_ID = c.Int(nullable: false),
                         Poslovni_partner_ID = c.Int(nullable: false),
                     })
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("dbo.Poslovni_partner", t => t.Poslovni_partner_ID)
-                .ForeignKey("dbo.Stavka_dokumenta", t => t.Stavka_dokumenta_ID)
-                .ForeignKey("dbo.Magacins", t => t.MagacinUDokumentu_ID)
-                .ForeignKey("dbo.Magacins", t => t.MagacinKomPripada_ID)
-                .Index(t => t.Stavka_dokumenta_ID)
-                .Index(t => t.MagacinUDokumentu_ID)
-                .Index(t => t.MagacinKomPripada_ID)
+                .ForeignKey("dbo.Magacin", t => t.Magacin_u_dokumentu_ID)
+                .ForeignKey("dbo.Magacin", t => t.Pripada_magacinu_ID)
+                .Index(t => t.Pripada_magacinu_ID)
+                .Index(t => t.Magacin_u_dokumentu_ID)
                 .Index(t => t.Poslovni_partner_ID);
             
             CreateTable(
@@ -100,20 +97,20 @@ namespace WebApplication1.Migrations
                     {
                         Id = c.Int(nullable: false, identity: true),
                         Tip = c.Int(nullable: false),
-                        Naziv = c.String(),
+                        Naziv = c.String(maxLength: 128, unicode: false),
                         PIB = c.String(nullable: false, maxLength: 128, unicode: false),
                         Maticni_broj = c.String(nullable: false, maxLength: 128, unicode: false),
-                        Adresa = c.String(),
-                        Mesto_ID = c.Int(nullable: false),
+                        Adresa = c.String(maxLength: 128, unicode: false),
+                        Iz_mesta_ID = c.Int(nullable: false),
                     })
                 .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.Mestoes", t => t.Mesto_ID)
+                .ForeignKey("dbo.Mesto", t => t.Iz_mesta_ID)
                 .Index(t => t.PIB, unique: true)
                 .Index(t => t.Maticni_broj, unique: true)
-                .Index(t => t.Mesto_ID);
+                .Index(t => t.Iz_mesta_ID);
             
             CreateTable(
-                "dbo.Fakturas",
+                "dbo.Faktura",
                 c => new
                     {
                         Id = c.Int(nullable: false, identity: true),
@@ -144,22 +141,22 @@ namespace WebApplication1.Migrations
                         Preduzece_ID = c.Int(nullable: false),
                     })
                 .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.Preduzeces", t => t.Preduzece_ID)
+                .ForeignKey("dbo.Preduzece", t => t.Preduzece_ID)
                 .Index(t => t.Preduzece_ID);
             
             CreateTable(
-                "dbo.Preduzeces",
+                "dbo.Preduzece",
                 c => new
                     {
                         Id = c.Int(nullable: false, identity: true),
-                        Naziv = c.String(),
+                        Naziv = c.String(maxLength: 128, unicode: false),
                         Maticni_broj = c.String(nullable: false, maxLength: 128, unicode: false),
                         PIB = c.String(nullable: false, maxLength: 128, unicode: false),
-                        Adresa = c.String(),
+                        Adresa = c.String(maxLength: 128, unicode: false),
                         Mesto_ID = c.Int(nullable: false),
                     })
                 .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.Mestoes", t => t.Mesto_ID)
+                .ForeignKey("dbo.Mesto", t => t.Mesto_ID)
                 .Index(t => t.Maticni_broj, unique: true)
                 .Index(t => t.PIB, unique: true)
                 .Index(t => t.Mesto_ID);
@@ -169,22 +166,22 @@ namespace WebApplication1.Migrations
                 c => new
                     {
                         Id = c.Int(nullable: false, identity: true),
-                        Naziv = c.String(),
+                        Naziv = c.String(maxLength: 128, unicode: false),
                         Preduzece_ID = c.Int(nullable: false),
                         PDV_ID = c.Int(nullable: false),
                     })
                 .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.PDVs", t => t.PDV_ID)
-                .ForeignKey("dbo.Preduzeces", t => t.Preduzece_ID)
+                .ForeignKey("dbo.PDV", t => t.PDV_ID)
+                .ForeignKey("dbo.Preduzece", t => t.Preduzece_ID)
                 .Index(t => t.Preduzece_ID)
                 .Index(t => t.PDV_ID);
             
             CreateTable(
-                "dbo.PDVs",
+                "dbo.PDV",
                 c => new
                     {
                         Id = c.Int(nullable: false, identity: true),
-                        Naziv_PDV_a = c.String(),
+                        Naziv_PDV_a = c.String(maxLength: 128, unicode: false),
                     })
                 .PrimaryKey(t => t.Id);
             
@@ -198,23 +195,23 @@ namespace WebApplication1.Migrations
                         PDV_ID = c.Int(nullable: false),
                     })
                 .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.PDVs", t => t.PDV_ID)
+                .ForeignKey("dbo.PDV", t => t.PDV_ID)
                 .Index(t => t.PDV_ID);
             
             CreateTable(
-                "dbo.Robas",
+                "dbo.Roba",
                 c => new
                     {
                         Id = c.Int(nullable: false, identity: true),
-                        Naziv = c.String(),
+                        Naziv = c.String(maxLength: 128, unicode: false),
                         Grupa_roba_ID = c.Int(nullable: false),
                         Preduzece_ID = c.Int(nullable: false),
                         Jedinica_mere_ID = c.Int(nullable: false),
                     })
                 .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.Grupa_roba", t => t.Grupa_roba_ID)
                 .ForeignKey("dbo.Jedinica_mere", t => t.Jedinica_mere_ID)
-                .ForeignKey("dbo.Preduzeces", t => t.Preduzece_ID)
+                .ForeignKey("dbo.Grupa_roba", t => t.Grupa_roba_ID)
+                .ForeignKey("dbo.Preduzece", t => t.Preduzece_ID)
                 .Index(t => t.Grupa_roba_ID)
                 .Index(t => t.Preduzece_ID)
                 .Index(t => t.Jedinica_mere_ID);
@@ -225,7 +222,7 @@ namespace WebApplication1.Migrations
                     {
                         Id = c.Int(nullable: false, identity: true),
                         Naziv = c.String(nullable: false, maxLength: 128, unicode: false),
-                        Oznaka = c.String(),
+                        Oznaka = c.String(maxLength: 128, unicode: false),
                     })
                 .PrimaryKey(t => t.Id)
                 .Index(t => t.Naziv);
@@ -244,19 +241,22 @@ namespace WebApplication1.Migrations
                         Zavisni_trosak = c.Double(nullable: false),
                         Kalkulisana_cena = c.Double(nullable: false),
                         Ukupna_vrednost = c.Double(nullable: false),
+                        Prijemni_dokument_ID = c.Int(nullable: false),
                         Roba_ID = c.Int(nullable: false),
                     })
                 .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.Robas", t => t.Roba_ID)
+                .ForeignKey("dbo.Prijemni_dokument", t => t.Prijemni_dokument_ID)
+                .ForeignKey("dbo.Roba", t => t.Roba_ID)
+                .Index(t => t.Prijemni_dokument_ID)
                 .Index(t => t.Roba_ID);
             
             CreateTable(
-                "dbo.Mestoes",
+                "dbo.Mesto",
                 c => new
                     {
                         Id = c.Int(nullable: false, identity: true),
-                        Naziv = c.String(),
-                        Postanski_broj = c.String(),
+                        Naziv = c.String(maxLength: 128, unicode: false),
+                        Postanski_broj = c.String(maxLength: 128, unicode: false),
                     })
                 .PrimaryKey(t => t.Id);
             
@@ -265,69 +265,69 @@ namespace WebApplication1.Migrations
         public override void Down()
         {
             DropForeignKey("dbo.Analitika_magacinske_kartice", "Robna_kartica_ID", "dbo.Robna_kartica");
-            DropForeignKey("dbo.Robna_kartica", "Roba_ID", "dbo.Robas");
+            DropForeignKey("dbo.Robna_kartica", "Magacin_ID", "dbo.Magacin");
+            DropForeignKey("dbo.Prijemni_dokument", "Pripada_magacinu_ID", "dbo.Magacin");
+            DropForeignKey("dbo.Magacin", "Preduzece_ID", "dbo.Preduzece");
+            DropForeignKey("dbo.Magacin", "Mesto_ID", "dbo.Mesto");
+            DropForeignKey("dbo.Prijemni_dokument", "Magacin_u_dokumentu_ID", "dbo.Magacin");
+            DropForeignKey("dbo.Faktura", "Poslovni_partner_ID", "dbo.Poslovni_partner");
+            DropForeignKey("dbo.Faktura", "Poslovna_godina_ID", "dbo.Poslovna_godina");
             DropForeignKey("dbo.Robna_kartica", "Poslovna_godina_ID", "dbo.Poslovna_godina");
-            DropForeignKey("dbo.Robna_kartica", "Magacin_ID", "dbo.Magacins");
-            DropForeignKey("dbo.Prijemni_dokument", "MagacinKomPripada_ID", "dbo.Magacins");
-            DropForeignKey("dbo.Magacins", "Preduzece_ID", "dbo.Preduzeces");
-            DropForeignKey("dbo.Magacins", "Mesto_ID", "dbo.Mestoes");
-            DropForeignKey("dbo.Prijemni_dokument", "MagacinUDokumentu_ID", "dbo.Magacins");
-            DropForeignKey("dbo.Prijemni_dokument", "Stavka_dokumenta_ID", "dbo.Stavka_dokumenta");
+            DropForeignKey("dbo.Poslovna_godina", "Preduzece_ID", "dbo.Preduzece");
+            DropForeignKey("dbo.Roba", "Preduzece_ID", "dbo.Preduzece");
+            DropForeignKey("dbo.Preduzece", "Mesto_ID", "dbo.Mesto");
+            DropForeignKey("dbo.Poslovni_partner", "Iz_mesta_ID", "dbo.Mesto");
+            DropForeignKey("dbo.Roba", "Grupa_roba_ID", "dbo.Grupa_roba");
+            DropForeignKey("dbo.Stavka_dokumenta", "Roba_ID", "dbo.Roba");
+            DropForeignKey("dbo.Stavka_dokumenta", "Prijemni_dokument_ID", "dbo.Prijemni_dokument");
+            DropForeignKey("dbo.Robna_kartica", "Roba_ID", "dbo.Roba");
+            DropForeignKey("dbo.Roba", "Jedinica_mere_ID", "dbo.Jedinica_mere");
+            DropForeignKey("dbo.Grupa_roba", "Preduzece_ID", "dbo.Preduzece");
+            DropForeignKey("dbo.Grupa_roba", "PDV_ID", "dbo.PDV");
+            DropForeignKey("dbo.Stopa_PDV_a", "PDV_ID", "dbo.PDV");
             DropForeignKey("dbo.Prijemni_dokument", "Poslovni_partner_ID", "dbo.Poslovni_partner");
-            DropForeignKey("dbo.Poslovni_partner", "Mesto_ID", "dbo.Mestoes");
-            DropForeignKey("dbo.Fakturas", "Poslovni_partner_ID", "dbo.Poslovni_partner");
-            DropForeignKey("dbo.Fakturas", "Poslovna_godina_ID", "dbo.Poslovna_godina");
-            DropForeignKey("dbo.Poslovna_godina", "Preduzece_ID", "dbo.Preduzeces");
-            DropForeignKey("dbo.Preduzeces", "Mesto_ID", "dbo.Mestoes");
-            DropForeignKey("dbo.Stavka_dokumenta", "Roba_ID", "dbo.Robas");
-            DropForeignKey("dbo.Robas", "Preduzece_ID", "dbo.Preduzeces");
-            DropForeignKey("dbo.Robas", "Jedinica_mere_ID", "dbo.Jedinica_mere");
-            DropForeignKey("dbo.Robas", "Grupa_roba_ID", "dbo.Grupa_roba");
-            DropForeignKey("dbo.Grupa_roba", "Preduzece_ID", "dbo.Preduzeces");
-            DropForeignKey("dbo.Grupa_roba", "PDV_ID", "dbo.PDVs");
-            DropForeignKey("dbo.Stopa_PDV_a", "PDV_ID", "dbo.PDVs");
             DropIndex("dbo.Stavka_dokumenta", new[] { "Roba_ID" });
+            DropIndex("dbo.Stavka_dokumenta", new[] { "Prijemni_dokument_ID" });
             DropIndex("dbo.Jedinica_mere", new[] { "Naziv" });
-            DropIndex("dbo.Robas", new[] { "Jedinica_mere_ID" });
-            DropIndex("dbo.Robas", new[] { "Preduzece_ID" });
-            DropIndex("dbo.Robas", new[] { "Grupa_roba_ID" });
+            DropIndex("dbo.Roba", new[] { "Jedinica_mere_ID" });
+            DropIndex("dbo.Roba", new[] { "Preduzece_ID" });
+            DropIndex("dbo.Roba", new[] { "Grupa_roba_ID" });
             DropIndex("dbo.Stopa_PDV_a", new[] { "PDV_ID" });
             DropIndex("dbo.Grupa_roba", new[] { "PDV_ID" });
             DropIndex("dbo.Grupa_roba", new[] { "Preduzece_ID" });
-            DropIndex("dbo.Preduzeces", new[] { "Mesto_ID" });
-            DropIndex("dbo.Preduzeces", new[] { "PIB" });
-            DropIndex("dbo.Preduzeces", new[] { "Maticni_broj" });
+            DropIndex("dbo.Preduzece", new[] { "Mesto_ID" });
+            DropIndex("dbo.Preduzece", new[] { "PIB" });
+            DropIndex("dbo.Preduzece", new[] { "Maticni_broj" });
             DropIndex("dbo.Poslovna_godina", new[] { "Preduzece_ID" });
-            DropIndex("dbo.Fakturas", new[] { "Poslovni_partner_ID" });
-            DropIndex("dbo.Fakturas", new[] { "Poslovna_godina_ID" });
-            DropIndex("dbo.Fakturas", new[] { "Broj_fakture" });
-            DropIndex("dbo.Poslovni_partner", new[] { "Mesto_ID" });
+            DropIndex("dbo.Faktura", new[] { "Poslovni_partner_ID" });
+            DropIndex("dbo.Faktura", new[] { "Poslovna_godina_ID" });
+            DropIndex("dbo.Faktura", new[] { "Broj_fakture" });
+            DropIndex("dbo.Poslovni_partner", new[] { "Iz_mesta_ID" });
             DropIndex("dbo.Poslovni_partner", new[] { "Maticni_broj" });
             DropIndex("dbo.Poslovni_partner", new[] { "PIB" });
             DropIndex("dbo.Prijemni_dokument", new[] { "Poslovni_partner_ID" });
-            DropIndex("dbo.Prijemni_dokument", new[] { "MagacinKomPripada_ID" });
-            DropIndex("dbo.Prijemni_dokument", new[] { "MagacinUDokumentu_ID" });
-            DropIndex("dbo.Prijemni_dokument", new[] { "Stavka_dokumenta_ID" });
-            DropIndex("dbo.Magacins", new[] { "Mesto_ID" });
-            DropIndex("dbo.Magacins", new[] { "Preduzece_ID" });
-            DropIndex("dbo.Magacins", new[] { "Adresa" });
+            DropIndex("dbo.Prijemni_dokument", new[] { "Magacin_u_dokumentu_ID" });
+            DropIndex("dbo.Prijemni_dokument", new[] { "Pripada_magacinu_ID" });
+            DropIndex("dbo.Magacin", new[] { "Mesto_ID" });
+            DropIndex("dbo.Magacin", new[] { "Preduzece_ID" });
+            DropIndex("dbo.Magacin", new[] { "Adresa" });
             DropIndex("dbo.Robna_kartica", new[] { "Poslovna_godina_ID" });
             DropIndex("dbo.Robna_kartica", new[] { "Magacin_ID" });
             DropIndex("dbo.Robna_kartica", new[] { "Roba_ID" });
             DropIndex("dbo.Analitika_magacinske_kartice", new[] { "Robna_kartica_ID" });
-            DropTable("dbo.Mestoes");
+            DropTable("dbo.Mesto");
             DropTable("dbo.Stavka_dokumenta");
             DropTable("dbo.Jedinica_mere");
-            DropTable("dbo.Robas");
+            DropTable("dbo.Roba");
             DropTable("dbo.Stopa_PDV_a");
-            DropTable("dbo.PDVs");
+            DropTable("dbo.PDV");
             DropTable("dbo.Grupa_roba");
-            DropTable("dbo.Preduzeces");
+            DropTable("dbo.Preduzece");
             DropTable("dbo.Poslovna_godina");
-            DropTable("dbo.Fakturas");
+            DropTable("dbo.Faktura");
             DropTable("dbo.Poslovni_partner");
             DropTable("dbo.Prijemni_dokument");
-            DropTable("dbo.Magacins");
+            DropTable("dbo.Magacin");
             DropTable("dbo.Robna_kartica");
             DropTable("dbo.Analitika_magacinske_kartice");
         }

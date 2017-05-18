@@ -9,5 +9,6 @@ namespace WebApplication1.Models
 			MM,
 			NI,
 			PS,
-			KOR	};
+			KOR	
+	};
 }

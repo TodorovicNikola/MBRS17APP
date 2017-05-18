@@ -4,7 +4,8 @@ namespace WebApplication1.Models
 {
 	public enum TipPoslovnogPartnera
 	{
-			Kupac,
-			Dobavljac,
-			Kupac_i_dobavljac	};
+			KUPAC,
+			DOBAVLJAC,
+			KUPAC_I_DOBAVLJAC	
+	};
 }

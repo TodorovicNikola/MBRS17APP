@@ -12,5 +12,6 @@ namespace WebApplication1.Models
 			button,
 			label,
 			menu,
-			menuItem	};
+			menuItem	
+	};
 }

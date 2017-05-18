@@ -10,14 +10,21 @@ namespace WebApplication1.Models
 {
 	public class Jedinica_mere
 	{  
-			[Key]
-			public int Id { get; set; }
-        [Column(TypeName = "VARCHAR")]
-        [StringLength(128)]
-        [Required]
-			[Index]	 	
-			public String Naziv { get; set; }
-		    public ICollection<Roba> Roba { get; set; }
-			public String Oznaka { get; set; }
+		[Key]
+		public int Id { get; set; }
+	         
+		[Column(TypeName = "VARCHAR")]
+		[StringLength(128)]
+		[Required]
+		[Index]	 	
+		public String Naziv { get; set; }
+	         
+	    [InverseProperty("Jedinica_mere")]
+	    public virtual ICollection<Roba> Roba_na_koju_se_odnosi { get; set; }
+	         
+		[Column(TypeName = "VARCHAR")]
+		[StringLength(128)]
+		public String Oznaka { get; set; }
+	         
 	}
 }

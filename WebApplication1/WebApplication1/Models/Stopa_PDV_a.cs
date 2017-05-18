@@ -10,16 +10,21 @@ namespace WebApplication1.Models
 {
 	public class Stopa_PDV_a
 	{  
-			[Key]
-			public int Id { get; set; }
-			public double Stopa { get; set; }
-			[Required]
-			public DateTime Datum_vazenja { get; set; }
-			[ForeignKey("PDV")]
-			[Required]
-		    public int PDV_ID { get; set; }
-		    
-		    [ForeignKey("PDV_ID")]
-		    public virtual PDV PDV { get; set; }
+		[Key]
+		public int Id { get; set; }
+	         
+		public double Stopa { get; set; }
+	         
+		[Required]
+		public DateTime Datum_vazenja { get; set; }
+	         
+		[ForeignKey("PDV")]
+		[Required]
+	    public int PDV_ID { get; set; }
+	    
+	    [ForeignKey("PDV_ID")]
+	    [InverseProperty("Stope_PDV_a")]
+	    public virtual PDV PDV { get; set; }
+	         
 	}
 }

@@ -16,8 +16,8 @@ namespace WebApplication1.Migrations
         protected override void Seed(WebApplication1.Models.AppDBContext context)
         {
             context.Mesto.AddOrUpdate(
-               new Mesto { Naziv = "Subotica", Postanski_broj = "24000" }
-               );
+                new Mesto { Naziv = "Subotica", Postanski_broj = "24000" }
+                );
 
             context.SaveChanges();
 

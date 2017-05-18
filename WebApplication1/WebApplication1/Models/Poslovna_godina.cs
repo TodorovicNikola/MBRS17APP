@@ -10,17 +10,26 @@ namespace WebApplication1.Models
 {
 	public class Poslovna_godina
 	{  
-			[Key]
-			public int Id { get; set; }
-			public int Godina { get; set; }
-			public Boolean Zakljucena { get; set; }
-		    public ICollection<Robna_kartica> Robna_kartica { get; set; }
-		    public ICollection<Faktura> Faktura { get; set; }
-			[ForeignKey("Preduzece")]
-			[Required]
-		    public int Preduzece_ID { get; set; }
-		    
-		    [ForeignKey("Preduzece_ID")]
-		    public virtual Preduzece Preduzece { get; set; }
+		[Key]
+		public int Id { get; set; }
+	         
+		public int Godina { get; set; }
+	         
+		public Boolean Zakljucena { get; set; }		
+	         
+	    [InverseProperty("Poslovna_godina")]
+	    public virtual ICollection<Robna_kartica> Robne_kartice { get; set; }
+	         
+	    [InverseProperty("Poslovna_godina")]
+	    public virtual ICollection<Faktura> Fakture { get; set; }
+	         
+		[ForeignKey("Preduzece")]
+		[Required]
+	    public int Preduzece_ID { get; set; }
+	    
+	    [ForeignKey("Preduzece_ID")]
+	    [InverseProperty("Poslovne_godine")]
+	    public virtual Preduzece Preduzece { get; set; }
+	         
 	}
 }

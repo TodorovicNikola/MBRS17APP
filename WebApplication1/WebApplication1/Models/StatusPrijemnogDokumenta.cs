@@ -6,5 +6,6 @@ namespace WebApplication1.Models
 	{
 			F,
 			P,
-			S	};
+			S	
+	};
 }

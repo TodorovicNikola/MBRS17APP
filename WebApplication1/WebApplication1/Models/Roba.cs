@@ -10,28 +10,42 @@ namespace WebApplication1.Models
 {
 	public class Roba
 	{  
-			[Key]
-			public int Id { get; set; }
-			public String Naziv { get; set; }
-		    public ICollection<Robna_kartica> Robna_kartica { get; set; }
-		    public ICollection<Stavka_dokumenta> Stavka_dokumenta { get; set; }
-			[ForeignKey("Grupa_roba")]
-			[Required]
-		    public int Grupa_roba_ID { get; set; }
-		    
-		    [ForeignKey("Grupa_roba_ID")]
-		    public virtual Grupa_roba Grupa_roba { get; set; }
-			[ForeignKey("Preduzece")]
-			[Required]
-		    public int Preduzece_ID { get; set; }
-		    
-		    [ForeignKey("Preduzece_ID")]
-		    public virtual Preduzece Preduzece { get; set; }
-			[ForeignKey("Jedinica_mere")]
-			[Required]
-		    public int Jedinica_mere_ID { get; set; }
-		    
-		    [ForeignKey("Jedinica_mere_ID")]
-		    public virtual Jedinica_mere Jedinica_mere { get; set; }
+		[Key]
+		public int Id { get; set; }
+	         
+		[Column(TypeName = "VARCHAR")]
+		[StringLength(128)]
+		public String Naziv { get; set; }
+	         
+	    [InverseProperty("Roba")]
+	    public virtual ICollection<Robna_kartica> Robne_kartice { get; set; }
+	         
+	    [InverseProperty("Roba")]
+	    public virtual ICollection<Stavka_dokumenta> Stavke_dokumenata { get; set; }
+	         
+		[ForeignKey("Grupa_roba")]
+		[Required]
+	    public int Grupa_roba_ID { get; set; }
+	    
+	    [ForeignKey("Grupa_roba_ID")]
+	    [InverseProperty("Roba_koja_joj_pripada")]
+	    public virtual Grupa_roba Grupa_roba { get; set; }
+	         
+		[ForeignKey("Preduzece")]
+		[Required]
+	    public int Preduzece_ID { get; set; }
+	    
+	    [ForeignKey("Preduzece_ID")]
+	    [InverseProperty("Roba")]
+	    public virtual Preduzece Preduzece { get; set; }
+	         
+		[ForeignKey("Jedinica_mere")]
+		[Required]
+	    public int Jedinica_mere_ID { get; set; }
+	    
+	    [ForeignKey("Jedinica_mere_ID")]
+	    [InverseProperty("Roba_na_koju_se_odnosi")]
+	    public virtual Jedinica_mere Jedinica_mere { get; set; }
+	         
 	}
 }
