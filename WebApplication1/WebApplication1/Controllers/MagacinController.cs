@@ -19,6 +19,7 @@ namespace WebApplication1.Controllers
         // GET: api/Magacin
         public IQueryable<Magacin> GetMagacin()
         {
+
             return db.Magacin;
         }
 
@@ -26,6 +27,13 @@ namespace WebApplication1.Controllers
         [ResponseType(typeof(Magacin))]
         public IHttpActionResult GetMagacin(int id)
         {
+            //check if authorization header matches cookie in login controller
+            //cookie is generated when user makes successful login
+            if (!LoginController.CheckAuthorizationForRequest(Request))
+            {
+                return Unauthorized();
+            }
+            
             Magacin magacin = db. Magacin.Find(id);
             if (magacin == null)
             {
