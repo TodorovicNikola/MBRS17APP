@@ -77,13 +77,13 @@ namespace WebApplication1.Controllers
             }   
 
           */
-            //String html = "<body><table style='border:solid'><tr><td>sasasa</td></table></body>";
+            String html = "<body><table style='border:solid'><tr><td>sasasa</td></table></body>";
 
             var mesto = db.Mesto;
 
             Byte[] res = null;
             var response = Request.CreateResponse(HttpStatusCode.OK);
-            String html = generateHtmlOutOfObject(mesto);
+            //String html = generateHtmlOutOfObject(mesto);
             using (MemoryStream ms = new MemoryStream())
             {
 
