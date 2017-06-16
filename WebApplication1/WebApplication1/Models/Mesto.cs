@@ -29,6 +29,15 @@ namespace WebApplication1.Models
 	         
 	    [InverseProperty("Mesto")]
 	    public virtual ICollection<Preduzece> Preduzeca_iz_mesta { get; set; }
-	         
-	}
+
+        public bool ValidateEntity()
+        {
+            if (this.Naziv != null && this.Naziv.StartsWith("ale"))
+            {
+                return false;
+            }
+            return true;
+        }
+
+    }
 }

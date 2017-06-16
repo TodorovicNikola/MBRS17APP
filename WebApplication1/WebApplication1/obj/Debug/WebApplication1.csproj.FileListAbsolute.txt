@@ -199,3 +199,13 @@ C:\MBRSAPPBACK\MBRS17APP\WebApplication1\WebApplication1\obj\Debug\WebApplicatio
 C:\MBRSAPPBACK\MBRS17APP\WebApplication1\WebApplication1\obj\Debug\WebApplication1.csproj.GenerateResource.Cache
 C:\MBRSAPPBACK\MBRS17APP\WebApplication1\WebApplication1\obj\Debug\WebApplication1.dll
 C:\MBRSAPPBACK\MBRS17APP\WebApplication1\WebApplication1\obj\Debug\WebApplication1.pdb
+C:\MBRSAPPBACK\MBRS17APP\WebApplication1\WebApplication1\bin\PdfSharp.Charting.dll
+C:\MBRSAPPBACK\MBRS17APP\WebApplication1\WebApplication1\bin\PdfSharp.dll
+C:\MBRSAPPBACK\MBRS17APP\WebApplication1\WebApplication1\bin\PdfSharp.xml
+C:\MBRSAPPBACK\MBRS17APP\WebApplication1\WebApplication1\bin\PdfSharp.Charting.xml
+C:\MBRSAPPBACK\MBRS17APP\WebApplication1\WebApplication1\bin\de\PdfSharp.resources.dll
+C:\MBRSAPPBACK\MBRS17APP\WebApplication1\WebApplication1\bin\de\PdfSharp.Charting.resources.dll
+C:\MBRSAPPBACK\MBRS17APP\WebApplication1\WebApplication1\bin\HtmlRenderer.dll
+C:\MBRSAPPBACK\MBRS17APP\WebApplication1\WebApplication1\bin\HtmlRenderer.PdfSharp.dll
+C:\MBRSAPPBACK\MBRS17APP\WebApplication1\WebApplication1\bin\HtmlRenderer.pdb
+C:\MBRSAPPBACK\MBRS17APP\WebApplication1\WebApplication1\bin\HtmlRenderer.PdfSharp.pdb

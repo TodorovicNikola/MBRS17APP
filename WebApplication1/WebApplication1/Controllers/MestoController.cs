@@ -78,6 +78,11 @@ namespace WebApplication1.Controllers
             {
                 return BadRequest(ModelState);
             }
+            if (!mesto.ValidateEntity())
+            {
+                Console.WriteLine("OCL NOT PASSED");
+                return BadRequest(ModelState);
+            }
 
             db.Mesto.Add(mesto);
             db.SaveChanges();
