@@ -29,7 +29,7 @@ namespace WebApplication1.Models
 	         
 		[Required]
 		public double Zavisni_troskovi { get; set; }
-	         
+	     
 	    public virtual ICollection<Stavka_dokumenta> Stavke_dokumenta { get; set; }
 	         
 		[ForeignKey("Pripada_magacinu")]

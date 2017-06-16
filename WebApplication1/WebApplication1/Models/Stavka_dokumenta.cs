@@ -49,6 +49,8 @@ namespace WebApplication1.Models
 	    [ForeignKey("Roba_ID")]
 	    [InverseProperty("Stavke_dokumenata")]
 	    public virtual Roba Roba { get; set; }
+
+
 	         
 	}
 }
