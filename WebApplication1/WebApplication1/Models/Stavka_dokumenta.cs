@@ -1,6 +1,13 @@
-// DO NOT CHANGE THIS CODE
-// TEMPLATE model.ftl
-// AUTOMATICALLY GENERATED MODEL FOR Stavka_dokumenta
+/*
+
+######## DO NOT CHANGE THIS CODE! ########
+AUTOMATICALLY GENERATED MODEL FOR -- Stavka_dokumenta -- AS A PARTIAL CLASS
+
+TO ADD ADDITIONAL METHODS OR PROPERTIES TO THIS CLASS, CREATE ANOTHER PARTIAL CLASS OF THE SAME NAME!
+
+TEMPLATE - model.ftl
+
+*/
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -11,7 +18,7 @@ using System.Threading.Tasks;
 
 namespace WebApplication1.Models
 {
-	public class Stavka_dokumenta
+	public partial class Stavka_dokumenta
 	{  
 		//Constraint :Redni_broj_pozitive -> self.Redni_broj>0
 		
@@ -54,5 +61,6 @@ namespace WebApplication1.Models
 	    [InverseProperty("Stavke_dokumenata")]
 	    public Roba Roba { get; set; }
 	         
+	
 	}
 }

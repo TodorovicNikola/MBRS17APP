@@ -1,6 +1,13 @@
-// DO NOT CHANGE THIS CODE
-// TEMPLATE model.ftl
-// AUTOMATICALLY GENERATED MODEL FOR Roba
+/*
+
+######## DO NOT CHANGE THIS CODE! ########
+AUTOMATICALLY GENERATED MODEL FOR -- Roba -- AS A PARTIAL CLASS
+
+TO ADD ADDITIONAL METHODS OR PROPERTIES TO THIS CLASS, CREATE ANOTHER PARTIAL CLASS OF THE SAME NAME!
+
+TEMPLATE - model.ftl
+
+*/
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -11,7 +18,7 @@ using System.Threading.Tasks;
 
 namespace WebApplication1.Models
 {
-	public class Roba
+	public partial class Roba
 	{  
 	
 		[Key]
@@ -53,5 +60,6 @@ namespace WebApplication1.Models
 	    [InverseProperty("Roba_na_koju_se_odnosi")]
 	    public Jedinica_mere Jedinica_mere { get; set; }
 	         
+	
 	}
 }

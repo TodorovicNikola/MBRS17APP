@@ -1,6 +1,13 @@
-// DO NOT CHANGE THIS CODE
-// TEMPLATE model.ftl
-// AUTOMATICALLY GENERATED MODEL FOR Preduzece
+/*
+
+######## DO NOT CHANGE THIS CODE! ########
+AUTOMATICALLY GENERATED MODEL FOR -- Preduzece -- AS A PARTIAL CLASS
+
+TO ADD ADDITIONAL METHODS OR PROPERTIES TO THIS CLASS, CREATE ANOTHER PARTIAL CLASS OF THE SAME NAME!
+
+TEMPLATE - model.ftl
+
+*/
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -11,7 +18,7 @@ using System.Threading.Tasks;
 
 namespace WebApplication1.Models
 {
-	public class Preduzece
+	public partial class Preduzece
 	{  
 	
 		[Key]
@@ -59,5 +66,6 @@ namespace WebApplication1.Models
 	    [InverseProperty("Preduzeca_iz_mesta")]
 	    public Mesto Mesto { get; set; }
 	         
+	
 	}
 }

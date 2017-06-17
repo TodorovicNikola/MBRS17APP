@@ -1,6 +1,13 @@
-// DO NOT CHANGE THIS CODE
-// TEMPLATE model.ftl
-// AUTOMATICALLY GENERATED MODEL FOR PDV
+/*
+
+######## DO NOT CHANGE THIS CODE! ########
+AUTOMATICALLY GENERATED MODEL FOR -- PDV -- AS A PARTIAL CLASS
+
+TO ADD ADDITIONAL METHODS OR PROPERTIES TO THIS CLASS, CREATE ANOTHER PARTIAL CLASS OF THE SAME NAME!
+
+TEMPLATE - model.ftl
+
+*/
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -11,7 +18,7 @@ using System.Threading.Tasks;
 
 namespace WebApplication1.Models
 {
-	public class PDV
+	public partial class PDV
 	{  
 	
 		[Key]
@@ -29,5 +36,6 @@ namespace WebApplication1.Models
 	    [InverseProperty("PDV")]
 	    public ICollection<Stopa_PDV_a> Stope_PDV_a { get; set; }
 	         
+	
 	}
 }

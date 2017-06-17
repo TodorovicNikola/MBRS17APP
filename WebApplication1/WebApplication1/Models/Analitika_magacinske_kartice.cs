@@ -1,6 +1,13 @@
-// DO NOT CHANGE THIS CODE
-// TEMPLATE model.ftl
-// AUTOMATICALLY GENERATED MODEL FOR Analitika_magacinske_kartice
+/*
+
+######## DO NOT CHANGE THIS CODE! ########
+AUTOMATICALLY GENERATED MODEL FOR -- Analitika_magacinske_kartice -- AS A PARTIAL CLASS
+
+TO ADD ADDITIONAL METHODS OR PROPERTIES TO THIS CLASS, CREATE ANOTHER PARTIAL CLASS OF THE SAME NAME!
+
+TEMPLATE - model.ftl
+
+*/
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -11,7 +18,7 @@ using System.Threading.Tasks;
 
 namespace WebApplication1.Models
 {
-	public class Analitika_magacinske_kartice
+	public partial class Analitika_magacinske_kartice
 	{  
 	
 		[Key]
@@ -37,5 +44,6 @@ namespace WebApplication1.Models
 	    [InverseProperty("Analiticke_kartice")]
 	    public Robna_kartica Robna_kartica { get; set; }
 	         
+	
 	}
 }

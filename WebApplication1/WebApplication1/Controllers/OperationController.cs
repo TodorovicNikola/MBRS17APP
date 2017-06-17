@@ -16,7 +16,7 @@ using iTextSharp.text.pdf;
 
 namespace WebApplication1.Controllers
 {
-    public class OperationController : ApiController
+    public partial class OperationController : ApiController
     {
     	private AppDBContext db = new AppDBContext();
     			 public static String generateHtmlOutOfFaktura(DbSet<Faktura> tableData)
@@ -107,6 +107,7 @@ namespace WebApplication1.Controllers
         
         [ResponseType(typeof(Faktura))]
         [HttpPost]
+        [Route("api/operations/Proknjizi")]
         public IHttpActionResult Proknjizi(Faktura faktura)
         {
             /*
@@ -118,6 +119,7 @@ namespace WebApplication1.Controllers
         
         [ResponseType(typeof(Robna_kartica))]
         [HttpPost]
+        [Route("api/operations/Generisi_statistiku")]
         public IHttpActionResult Generisi_statistiku(Robna_kartica robna_kartica)
         {
             /*
@@ -126,8 +128,7 @@ namespace WebApplication1.Controllers
             
             return Ok();
         }
-        
 
-        
     }
+
 }

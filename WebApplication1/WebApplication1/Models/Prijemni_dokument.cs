@@ -1,6 +1,13 @@
-// DO NOT CHANGE THIS CODE
-// TEMPLATE model.ftl
-// AUTOMATICALLY GENERATED MODEL FOR Prijemni_dokument
+/*
+
+######## DO NOT CHANGE THIS CODE! ########
+AUTOMATICALLY GENERATED MODEL FOR -- Prijemni_dokument -- AS A PARTIAL CLASS
+
+TO ADD ADDITIONAL METHODS OR PROPERTIES TO THIS CLASS, CREATE ANOTHER PARTIAL CLASS OF THE SAME NAME!
+
+TEMPLATE - model.ftl
+
+*/
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -11,13 +18,13 @@ using System.Threading.Tasks;
 
 namespace WebApplication1.Models
 {
-	public class Prijemni_dokument
+	public partial class Prijemni_dokument
 	{  
 	
+		public int Redni_broj { get; set; }
+	         
 		[Key]
 		public int Id { get; set; }
-	         
-		public int Redni_broj { get; set; }
 	         
 		[Required]
 		public DateTime Datum_formiranja { get; set; }
@@ -63,6 +70,7 @@ namespace WebApplication1.Models
 	    [InverseProperty("Dokumenti_u_kojima_se_pominje")]
 	    public Poslovni_partner Poslovni_partner { get; set; }
 	         
+	
 		public void Stampaj()
 		{
 			// USER CODE STARTS HERE
