@@ -1,3 +1,6 @@
+// DO NOT CHANGE THIS CODE
+// TEMPLATE model.ftl
+// AUTOMATICALLY GENERATED MODEL FOR PDV
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -10,18 +13,21 @@ namespace WebApplication1.Models
 {
 	public class PDV
 	{  
+	
 		[Key]
 		public int Id { get; set; }
 	         
 		[Column(TypeName = "VARCHAR")]
 		[StringLength(128)]
+		[Required]
+		[Index]	 	
 		public String Naziv_PDV_a { get; set; }
 	         
 	    [InverseProperty("PDV")]
-	    public virtual ICollection<Grupa_roba> Grupe_roba { get; set; }
+	    public ICollection<Grupa_roba> Grupe_roba { get; set; }
 	         
 	    [InverseProperty("PDV")]
-	    public virtual ICollection<Stopa_PDV_a> Stope_PDV_a { get; set; }
+	    public ICollection<Stopa_PDV_a> Stope_PDV_a { get; set; }
 	         
 	}
 }

@@ -6,58 +6,58 @@ using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
-using System.Web.Http.Description;
+using System.Web.Http.ModelBinding;
+using System.Web.Http.OData;
+using System.Web.Http.OData.Routing;
 using WebApplication1.Models;
 
 namespace WebApplication1.Controllers
 {
-    public class Grupa_robaController : ApiController
+    public class Grupa_robaController : ODataController
     {
         private AppDBContext db = new AppDBContext();
 
-        // GET: api/Grupa_roba
+        // GET: odata/Grupa_roba
+        [EnableQuery]
         public IQueryable<Grupa_roba> GetGrupa_roba()
         {
             return db.Grupa_roba;
         }
 
-        // GET: api/Grupa_roba/5
-        [ResponseType(typeof(Grupa_roba))]
-        public IHttpActionResult GetGrupa_roba(int id)
+        // GET: odata/Grupa_roba(5)
+        [EnableQuery]
+        public SingleResult<Grupa_roba> GetGrupa_roba([FromODataUri] int key)
         {
-            Grupa_roba grupa_roba = db. Grupa_roba.Find(id);
-            if (grupa_roba == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(grupa_roba);
+            return SingleResult.Create(db.Grupa_roba.Where(grupa_roba => grupa_roba.Id == key));
         }
 
-        // PUT: api/Grupa_roba/5
-        [ResponseType(typeof(void))]
-        public IHttpActionResult PutGrupa_roba(int id,  Grupa_roba grupa_roba)
+        // PUT: odata/Grupa_roba(5)
+        public async Task<IHttpActionResult> Put([FromODataUri] int key, Delta<Grupa_roba> patch)
         {
+            Validate(patch.GetEntity());
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != grupa_roba.Id)
+            Grupa_roba grupa_roba = await db.Grupa_roba.FindAsync(key);
+            if (grupa_roba == null)
             {
-                return BadRequest();
+                return NotFound();
             }
 
-            db.Entry(grupa_roba).State = EntityState.Modified;
+            patch.Put(grupa_roba);
 
             try
             {
-                db.SaveChanges();
+                await db.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!Grupa_robaExists(id))
+                if (!Grupa_robaExists(key))
                 {
                     return NotFound();
                 }
@@ -67,12 +67,11 @@ namespace WebApplication1.Controllers
                 }
             }
 
-            return StatusCode(HttpStatusCode.NoContent);
+            return Updated(grupa_roba);
         }
 
-        // POST: api/Grupa_roba
-        [ResponseType(typeof(Grupa_roba))]
-        public IHttpActionResult PostGrupa_roba(Grupa_roba grupa_roba)
+        // POST: odata/Grupa_roba
+        public async Task<IHttpActionResult> Post(Grupa_roba grupa_roba)
         {
             if (!ModelState.IsValid)
             {
@@ -80,25 +79,62 @@ namespace WebApplication1.Controllers
             }
 
             db.Grupa_roba.Add(grupa_roba);
-            db.SaveChanges();
+            await db.SaveChangesAsync();
 
-            return CreatedAtRoute("DefaultApi", new { id = grupa_roba.Id }, grupa_roba);
+            return Created(grupa_roba);
         }
 
-        // DELETE: api/Grupa_roba/5
-        [ResponseType(typeof(Grupa_roba))]
-        public IHttpActionResult DeleteGrupa_roba(int id)
+        // PATCH: odata/Grupa_roba(5)
+        [AcceptVerbs("PATCH", "MERGE")]
+        public async Task<IHttpActionResult> Patch([FromODataUri] int key, Delta<Grupa_roba> patch)
         {
-            Grupa_roba grupa_roba = db.Grupa_roba.Find(id);
+            Validate(patch.GetEntity());
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            Grupa_roba grupa_roba = await db.Grupa_roba.FindAsync(key);
+            if (grupa_roba == null)
+            {
+                return NotFound();
+            }
+
+            patch.Patch(grupa_roba);
+
+            try
+            {
+                await db.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!Grupa_robaExists(key))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return Updated(grupa_roba);
+        }
+
+        // DELETE: odata/Grupa_roba(5)
+        public async Task<IHttpActionResult> Delete([FromODataUri] int key)
+        {
+            Grupa_roba grupa_roba = await db.Grupa_roba.FindAsync(key);
             if (grupa_roba == null)
             {
                 return NotFound();
             }
 
             db.Grupa_roba.Remove(grupa_roba);
-            db.SaveChanges();
+            await db.SaveChangesAsync();
 
-            return Ok(grupa_roba);
+            return StatusCode(HttpStatusCode.NoContent);
         }
 
         protected override void Dispose(bool disposing)
@@ -110,9 +146,9 @@ namespace WebApplication1.Controllers
             base.Dispose(disposing);
         }
 
-        private bool Grupa_robaExists(int id)
+        private bool Grupa_robaExists(int key)
         {
-            return db.Grupa_roba.Count(e => e.Id == id) > 0;
+            return db.Grupa_roba.Count(e => e.Id == key) > 0;
         }
     }
 }

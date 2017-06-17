@@ -6,58 +6,58 @@ using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
-using System.Web.Http.Description;
+using System.Web.Http.ModelBinding;
+using System.Web.Http.OData;
+using System.Web.Http.OData.Routing;
 using WebApplication1.Models;
 
 namespace WebApplication1.Controllers
 {
-    public class RobaController : ApiController
+    public class RobaController : ODataController
     {
         private AppDBContext db = new AppDBContext();
 
-        // GET: api/Roba
+        // GET: odata/Roba
+        [EnableQuery]
         public IQueryable<Roba> GetRoba()
         {
             return db.Roba;
         }
 
-        // GET: api/Roba/5
-        [ResponseType(typeof(Roba))]
-        public IHttpActionResult GetRoba(int id)
+        // GET: odata/Roba(5)
+        [EnableQuery]
+        public SingleResult<Roba> GetRoba([FromODataUri] int key)
         {
-            Roba roba = db. Roba.Find(id);
-            if (roba == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(roba);
+            return SingleResult.Create(db.Roba.Where(roba => roba.Id == key));
         }
 
-        // PUT: api/Roba/5
-        [ResponseType(typeof(void))]
-        public IHttpActionResult PutRoba(int id,  Roba roba)
+        // PUT: odata/Roba(5)
+        public async Task<IHttpActionResult> Put([FromODataUri] int key, Delta<Roba> patch)
         {
+            Validate(patch.GetEntity());
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != roba.Id)
+            Roba roba = await db.Roba.FindAsync(key);
+            if (roba == null)
             {
-                return BadRequest();
+                return NotFound();
             }
 
-            db.Entry(roba).State = EntityState.Modified;
+            patch.Put(roba);
 
             try
             {
-                db.SaveChanges();
+                await db.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!RobaExists(id))
+                if (!RobaExists(key))
                 {
                     return NotFound();
                 }
@@ -67,12 +67,11 @@ namespace WebApplication1.Controllers
                 }
             }
 
-            return StatusCode(HttpStatusCode.NoContent);
+            return Updated(roba);
         }
 
-        // POST: api/Roba
-        [ResponseType(typeof(Roba))]
-        public IHttpActionResult PostRoba(Roba roba)
+        // POST: odata/Roba
+        public async Task<IHttpActionResult> Post(Roba roba)
         {
             if (!ModelState.IsValid)
             {
@@ -80,25 +79,62 @@ namespace WebApplication1.Controllers
             }
 
             db.Roba.Add(roba);
-            db.SaveChanges();
+            await db.SaveChangesAsync();
 
-            return CreatedAtRoute("DefaultApi", new { id = roba.Id }, roba);
+            return Created(roba);
         }
 
-        // DELETE: api/Roba/5
-        [ResponseType(typeof(Roba))]
-        public IHttpActionResult DeleteRoba(int id)
+        // PATCH: odata/Roba(5)
+        [AcceptVerbs("PATCH", "MERGE")]
+        public async Task<IHttpActionResult> Patch([FromODataUri] int key, Delta<Roba> patch)
         {
-            Roba roba = db.Roba.Find(id);
+            Validate(patch.GetEntity());
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            Roba roba = await db.Roba.FindAsync(key);
+            if (roba == null)
+            {
+                return NotFound();
+            }
+
+            patch.Patch(roba);
+
+            try
+            {
+                await db.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!RobaExists(key))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return Updated(roba);
+        }
+
+        // DELETE: odata/Roba(5)
+        public async Task<IHttpActionResult> Delete([FromODataUri] int key)
+        {
+            Roba roba = await db.Roba.FindAsync(key);
             if (roba == null)
             {
                 return NotFound();
             }
 
             db.Roba.Remove(roba);
-            db.SaveChanges();
+            await db.SaveChangesAsync();
 
-            return Ok(roba);
+            return StatusCode(HttpStatusCode.NoContent);
         }
 
         protected override void Dispose(bool disposing)
@@ -110,9 +146,9 @@ namespace WebApplication1.Controllers
             base.Dispose(disposing);
         }
 
-        private bool RobaExists(int id)
+        private bool RobaExists(int key)
         {
-            return db.Roba.Count(e => e.Id == id) > 0;
+            return db.Roba.Count(e => e.Id == key) > 0;
         }
     }
 }

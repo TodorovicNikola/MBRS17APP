@@ -6,58 +6,58 @@ using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
-using System.Web.Http.Description;
+using System.Web.Http.ModelBinding;
+using System.Web.Http.OData;
+using System.Web.Http.OData.Routing;
 using WebApplication1.Models;
 
 namespace WebApplication1.Controllers
 {
-    public class FakturaController : ApiController
+    public class FakturaController : ODataController
     {
         private AppDBContext db = new AppDBContext();
 
-        // GET: api/Faktura
+        // GET: odata/Faktura
+        [EnableQuery]
         public IQueryable<Faktura> GetFaktura()
         {
             return db.Faktura;
         }
 
-        // GET: api/Faktura/5
-        [ResponseType(typeof(Faktura))]
-        public IHttpActionResult GetFaktura(int id)
+        // GET: odata/Faktura(5)
+        [EnableQuery]
+        public SingleResult<Faktura> GetFaktura([FromODataUri] int key)
         {
-            Faktura faktura = db. Faktura.Find(id);
-            if (faktura == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(faktura);
+            return SingleResult.Create(db.Faktura.Where(faktura => faktura.Id == key));
         }
 
-        // PUT: api/Faktura/5
-        [ResponseType(typeof(void))]
-        public IHttpActionResult PutFaktura(int id,  Faktura faktura)
+        // PUT: odata/Faktura(5)
+        public async Task<IHttpActionResult> Put([FromODataUri] int key, Delta<Faktura> patch)
         {
+            Validate(patch.GetEntity());
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != faktura.Id)
+            Faktura faktura = await db.Faktura.FindAsync(key);
+            if (faktura == null)
             {
-                return BadRequest();
+                return NotFound();
             }
 
-            db.Entry(faktura).State = EntityState.Modified;
+            patch.Put(faktura);
 
             try
             {
-                db.SaveChanges();
+                await db.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!FakturaExists(id))
+                if (!FakturaExists(key))
                 {
                     return NotFound();
                 }
@@ -67,12 +67,11 @@ namespace WebApplication1.Controllers
                 }
             }
 
-            return StatusCode(HttpStatusCode.NoContent);
+            return Updated(faktura);
         }
 
-        // POST: api/Faktura
-        [ResponseType(typeof(Faktura))]
-        public IHttpActionResult PostFaktura(Faktura faktura)
+        // POST: odata/Faktura
+        public async Task<IHttpActionResult> Post(Faktura faktura)
         {
             if (!ModelState.IsValid)
             {
@@ -80,25 +79,62 @@ namespace WebApplication1.Controllers
             }
 
             db.Faktura.Add(faktura);
-            db.SaveChanges();
+            await db.SaveChangesAsync();
 
-            return CreatedAtRoute("DefaultApi", new { id = faktura.Id }, faktura);
+            return Created(faktura);
         }
 
-        // DELETE: api/Faktura/5
-        [ResponseType(typeof(Faktura))]
-        public IHttpActionResult DeleteFaktura(int id)
+        // PATCH: odata/Faktura(5)
+        [AcceptVerbs("PATCH", "MERGE")]
+        public async Task<IHttpActionResult> Patch([FromODataUri] int key, Delta<Faktura> patch)
         {
-            Faktura faktura = db.Faktura.Find(id);
+            Validate(patch.GetEntity());
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            Faktura faktura = await db.Faktura.FindAsync(key);
+            if (faktura == null)
+            {
+                return NotFound();
+            }
+
+            patch.Patch(faktura);
+
+            try
+            {
+                await db.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!FakturaExists(key))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return Updated(faktura);
+        }
+
+        // DELETE: odata/Faktura(5)
+        public async Task<IHttpActionResult> Delete([FromODataUri] int key)
+        {
+            Faktura faktura = await db.Faktura.FindAsync(key);
             if (faktura == null)
             {
                 return NotFound();
             }
 
             db.Faktura.Remove(faktura);
-            db.SaveChanges();
+            await db.SaveChangesAsync();
 
-            return Ok(faktura);
+            return StatusCode(HttpStatusCode.NoContent);
         }
 
         protected override void Dispose(bool disposing)
@@ -110,9 +146,9 @@ namespace WebApplication1.Controllers
             base.Dispose(disposing);
         }
 
-        private bool FakturaExists(int id)
+        private bool FakturaExists(int key)
         {
-            return db.Faktura.Count(e => e.Id == id) > 0;
+            return db.Faktura.Count(e => e.Id == key) > 0;
         }
     }
 }

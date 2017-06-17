@@ -6,58 +6,58 @@ using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
-using System.Web.Http.Description;
+using System.Web.Http.ModelBinding;
+using System.Web.Http.OData;
+using System.Web.Http.OData.Routing;
 using WebApplication1.Models;
 
 namespace WebApplication1.Controllers
 {
-    public class Stopa_PDV_aController : ApiController
+    public class Stopa_PDV_aController : ODataController
     {
         private AppDBContext db = new AppDBContext();
 
-        // GET: api/Stopa_PDV_a
+        // GET: odata/Stopa_PDV_a
+        [EnableQuery]
         public IQueryable<Stopa_PDV_a> GetStopa_PDV_a()
         {
             return db.Stopa_PDV_a;
         }
 
-        // GET: api/Stopa_PDV_a/5
-        [ResponseType(typeof(Stopa_PDV_a))]
-        public IHttpActionResult GetStopa_PDV_a(int id)
+        // GET: odata/Stopa_PDV_a(5)
+        [EnableQuery]
+        public SingleResult<Stopa_PDV_a> GetStopa_PDV_a([FromODataUri] int key)
         {
-            Stopa_PDV_a stopa_pdv_a = db. Stopa_PDV_a.Find(id);
-            if (stopa_pdv_a == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(stopa_pdv_a);
+            return SingleResult.Create(db.Stopa_PDV_a.Where(stopa_pdv_a => stopa_pdv_a.Id == key));
         }
 
-        // PUT: api/Stopa_PDV_a/5
-        [ResponseType(typeof(void))]
-        public IHttpActionResult PutStopa_PDV_a(int id,  Stopa_PDV_a stopa_pdv_a)
+        // PUT: odata/Stopa_PDV_a(5)
+        public async Task<IHttpActionResult> Put([FromODataUri] int key, Delta<Stopa_PDV_a> patch)
         {
+            Validate(patch.GetEntity());
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != stopa_pdv_a.Id)
+            Stopa_PDV_a stopa_pdv_a = await db.Stopa_PDV_a.FindAsync(key);
+            if (stopa_pdv_a == null)
             {
-                return BadRequest();
+                return NotFound();
             }
 
-            db.Entry(stopa_pdv_a).State = EntityState.Modified;
+            patch.Put(stopa_pdv_a);
 
             try
             {
-                db.SaveChanges();
+                await db.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!Stopa_PDV_aExists(id))
+                if (!Stopa_PDV_aExists(key))
                 {
                     return NotFound();
                 }
@@ -67,12 +67,11 @@ namespace WebApplication1.Controllers
                 }
             }
 
-            return StatusCode(HttpStatusCode.NoContent);
+            return Updated(stopa_pdv_a);
         }
 
-        // POST: api/Stopa_PDV_a
-        [ResponseType(typeof(Stopa_PDV_a))]
-        public IHttpActionResult PostStopa_PDV_a(Stopa_PDV_a stopa_pdv_a)
+        // POST: odata/Stopa_PDV_a
+        public async Task<IHttpActionResult> Post(Stopa_PDV_a stopa_pdv_a)
         {
             if (!ModelState.IsValid)
             {
@@ -80,25 +79,62 @@ namespace WebApplication1.Controllers
             }
 
             db.Stopa_PDV_a.Add(stopa_pdv_a);
-            db.SaveChanges();
+            await db.SaveChangesAsync();
 
-            return CreatedAtRoute("DefaultApi", new { id = stopa_pdv_a.Id }, stopa_pdv_a);
+            return Created(stopa_pdv_a);
         }
 
-        // DELETE: api/Stopa_PDV_a/5
-        [ResponseType(typeof(Stopa_PDV_a))]
-        public IHttpActionResult DeleteStopa_PDV_a(int id)
+        // PATCH: odata/Stopa_PDV_a(5)
+        [AcceptVerbs("PATCH", "MERGE")]
+        public async Task<IHttpActionResult> Patch([FromODataUri] int key, Delta<Stopa_PDV_a> patch)
         {
-            Stopa_PDV_a stopa_pdv_a = db.Stopa_PDV_a.Find(id);
+            Validate(patch.GetEntity());
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            Stopa_PDV_a stopa_pdv_a = await db.Stopa_PDV_a.FindAsync(key);
+            if (stopa_pdv_a == null)
+            {
+                return NotFound();
+            }
+
+            patch.Patch(stopa_pdv_a);
+
+            try
+            {
+                await db.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!Stopa_PDV_aExists(key))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return Updated(stopa_pdv_a);
+        }
+
+        // DELETE: odata/Stopa_PDV_a(5)
+        public async Task<IHttpActionResult> Delete([FromODataUri] int key)
+        {
+            Stopa_PDV_a stopa_pdv_a = await db.Stopa_PDV_a.FindAsync(key);
             if (stopa_pdv_a == null)
             {
                 return NotFound();
             }
 
             db.Stopa_PDV_a.Remove(stopa_pdv_a);
-            db.SaveChanges();
+            await db.SaveChangesAsync();
 
-            return Ok(stopa_pdv_a);
+            return StatusCode(HttpStatusCode.NoContent);
         }
 
         protected override void Dispose(bool disposing)
@@ -110,9 +146,9 @@ namespace WebApplication1.Controllers
             base.Dispose(disposing);
         }
 
-        private bool Stopa_PDV_aExists(int id)
+        private bool Stopa_PDV_aExists(int key)
         {
-            return db.Stopa_PDV_a.Count(e => e.Id == id) > 0;
+            return db.Stopa_PDV_a.Count(e => e.Id == key) > 0;
         }
     }
 }

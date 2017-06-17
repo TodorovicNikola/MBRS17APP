@@ -6,58 +6,58 @@ using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
-using System.Web.Http.Description;
+using System.Web.Http.ModelBinding;
+using System.Web.Http.OData;
+using System.Web.Http.OData.Routing;
 using WebApplication1.Models;
 
 namespace WebApplication1.Controllers
 {
-    public class PreduzeceController : ApiController
+    public class PreduzeceController : ODataController
     {
         private AppDBContext db = new AppDBContext();
 
-        // GET: api/Preduzece
+        // GET: odata/Preduzece
+        [EnableQuery]
         public IQueryable<Preduzece> GetPreduzece()
         {
             return db.Preduzece;
         }
 
-        // GET: api/Preduzece/5
-        [ResponseType(typeof(Preduzece))]
-        public IHttpActionResult GetPreduzece(int id)
+        // GET: odata/Preduzece(5)
+        [EnableQuery]
+        public SingleResult<Preduzece> GetPreduzece([FromODataUri] int key)
         {
-            Preduzece preduzece = db. Preduzece.Find(id);
-            if (preduzece == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(preduzece);
+            return SingleResult.Create(db.Preduzece.Where(preduzece => preduzece.Id == key));
         }
 
-        // PUT: api/Preduzece/5
-        [ResponseType(typeof(void))]
-        public IHttpActionResult PutPreduzece(int id,  Preduzece preduzece)
+        // PUT: odata/Preduzece(5)
+        public async Task<IHttpActionResult> Put([FromODataUri] int key, Delta<Preduzece> patch)
         {
+            Validate(patch.GetEntity());
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != preduzece.Id)
+            Preduzece preduzece = await db.Preduzece.FindAsync(key);
+            if (preduzece == null)
             {
-                return BadRequest();
+                return NotFound();
             }
 
-            db.Entry(preduzece).State = EntityState.Modified;
+            patch.Put(preduzece);
 
             try
             {
-                db.SaveChanges();
+                await db.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!PreduzeceExists(id))
+                if (!PreduzeceExists(key))
                 {
                     return NotFound();
                 }
@@ -67,12 +67,11 @@ namespace WebApplication1.Controllers
                 }
             }
 
-            return StatusCode(HttpStatusCode.NoContent);
+            return Updated(preduzece);
         }
 
-        // POST: api/Preduzece
-        [ResponseType(typeof(Preduzece))]
-        public IHttpActionResult PostPreduzece(Preduzece preduzece)
+        // POST: odata/Preduzece
+        public async Task<IHttpActionResult> Post(Preduzece preduzece)
         {
             if (!ModelState.IsValid)
             {
@@ -80,25 +79,62 @@ namespace WebApplication1.Controllers
             }
 
             db.Preduzece.Add(preduzece);
-            db.SaveChanges();
+            await db.SaveChangesAsync();
 
-            return CreatedAtRoute("DefaultApi", new { id = preduzece.Id }, preduzece);
+            return Created(preduzece);
         }
 
-        // DELETE: api/Preduzece/5
-        [ResponseType(typeof(Preduzece))]
-        public IHttpActionResult DeletePreduzece(int id)
+        // PATCH: odata/Preduzece(5)
+        [AcceptVerbs("PATCH", "MERGE")]
+        public async Task<IHttpActionResult> Patch([FromODataUri] int key, Delta<Preduzece> patch)
         {
-            Preduzece preduzece = db.Preduzece.Find(id);
+            Validate(patch.GetEntity());
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            Preduzece preduzece = await db.Preduzece.FindAsync(key);
+            if (preduzece == null)
+            {
+                return NotFound();
+            }
+
+            patch.Patch(preduzece);
+
+            try
+            {
+                await db.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!PreduzeceExists(key))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return Updated(preduzece);
+        }
+
+        // DELETE: odata/Preduzece(5)
+        public async Task<IHttpActionResult> Delete([FromODataUri] int key)
+        {
+            Preduzece preduzece = await db.Preduzece.FindAsync(key);
             if (preduzece == null)
             {
                 return NotFound();
             }
 
             db.Preduzece.Remove(preduzece);
-            db.SaveChanges();
+            await db.SaveChangesAsync();
 
-            return Ok(preduzece);
+            return StatusCode(HttpStatusCode.NoContent);
         }
 
         protected override void Dispose(bool disposing)
@@ -110,9 +146,9 @@ namespace WebApplication1.Controllers
             base.Dispose(disposing);
         }
 
-        private bool PreduzeceExists(int id)
+        private bool PreduzeceExists(int key)
         {
-            return db.Preduzece.Count(e => e.Id == id) > 0;
+            return db.Preduzece.Count(e => e.Id == key) > 0;
         }
     }
 }

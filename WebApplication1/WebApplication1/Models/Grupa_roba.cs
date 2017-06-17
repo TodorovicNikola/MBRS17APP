@@ -1,3 +1,6 @@
+// DO NOT CHANGE THIS CODE
+// TEMPLATE model.ftl
+// AUTOMATICALLY GENERATED MODEL FOR Grupa_roba
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -10,15 +13,18 @@ namespace WebApplication1.Models
 {
 	public class Grupa_roba
 	{  
+	
 		[Key]
 		public int Id { get; set; }
 	         
 		[Column(TypeName = "VARCHAR")]
 		[StringLength(128)]
+		[Required]
+		[Index]	 	
 		public String Naziv { get; set; }
 	         
 	    [InverseProperty("Grupa_roba")]
-	    public virtual ICollection<Roba> Roba_koja_joj_pripada { get; set; }
+	    public ICollection<Roba> Roba_koja_joj_pripada { get; set; }
 	         
 		[ForeignKey("Preduzece")]
 		[Required]
@@ -26,7 +32,7 @@ namespace WebApplication1.Models
 	    
 	    [ForeignKey("Preduzece_ID")]
 	    [InverseProperty("Grupe_roba")]
-	    public virtual Preduzece Preduzece { get; set; }
+	    public Preduzece Preduzece { get; set; }
 	         
 		[ForeignKey("PDV")]
 		[Required]
@@ -34,7 +40,7 @@ namespace WebApplication1.Models
 	    
 	    [ForeignKey("PDV_ID")]
 	    [InverseProperty("Grupe_roba")]
-	    public virtual PDV PDV { get; set; }
+	    public PDV PDV { get; set; }
 	         
 	}
 }

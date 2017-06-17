@@ -1,3 +1,6 @@
+// DO NOT CHANGE THIS CODE
+// TEMPLATE model.ftl
+// AUTOMATICALLY GENERATED MODEL FOR Preduzece
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -10,11 +13,14 @@ namespace WebApplication1.Models
 {
 	public class Preduzece
 	{  
+	
 		[Key]
 		public int Id { get; set; }
 	         
 		[Column(TypeName = "VARCHAR")]
 		[StringLength(128)]
+		[Required]
+		[Index]	 	
 		public String Naziv { get; set; }
 	         
 		[Column(TypeName = "VARCHAR")]
@@ -34,16 +40,16 @@ namespace WebApplication1.Models
 		public String Adresa { get; set; }
 	         
 	    [InverseProperty("Preduzece")]
-	    public virtual ICollection<Roba> Roba { get; set; }
+	    public ICollection<Roba> Roba { get; set; }
 	         
 	    [InverseProperty("Preduzece")]
-	    public virtual ICollection<Grupa_roba> Grupe_roba { get; set; }
+	    public ICollection<Grupa_roba> Grupe_roba { get; set; }
 	         
 	    [InverseProperty("Preduzece")]
-	    public virtual ICollection<Magacin> Magacini { get; set; }
+	    public ICollection<Magacin> Magacini { get; set; }
 	         
 	    [InverseProperty("Preduzece")]
-	    public virtual ICollection<Poslovna_godina> Poslovne_godine { get; set; }
+	    public ICollection<Poslovna_godina> Poslovne_godine { get; set; }
 	         
 		[ForeignKey("Mesto")]
 		[Required]
@@ -51,7 +57,7 @@ namespace WebApplication1.Models
 	    
 	    [ForeignKey("Mesto_ID")]
 	    [InverseProperty("Preduzeca_iz_mesta")]
-	    public virtual Mesto Mesto { get; set; }
+	    public Mesto Mesto { get; set; }
 	         
 	}
 }

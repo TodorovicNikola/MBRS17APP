@@ -1,3 +1,6 @@
+// DO NOT CHANGE THIS CODE
+// TEMPLATE model.ftl
+// AUTOMATICALLY GENERATED MODEL FOR Faktura
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -10,6 +13,7 @@ namespace WebApplication1.Models
 {
 	public class Faktura
 	{  
+	
 		[Key]
 		public int Id { get; set; }
 	         
@@ -39,7 +43,7 @@ namespace WebApplication1.Models
 	    
 	    [ForeignKey("Poslovna_godina_ID")]
 	    [InverseProperty("Fakture")]
-	    public virtual Poslovna_godina Poslovna_godina { get; set; }
+	    public Poslovna_godina Poslovna_godina { get; set; }
 	         
 		[ForeignKey("Poslovni_partner")]
 		[Required]
@@ -47,7 +51,21 @@ namespace WebApplication1.Models
 	    
 	    [ForeignKey("Poslovni_partner_ID")]
 	    [InverseProperty("Fakture")]
-	    public virtual Poslovni_partner Poslovni_partner { get; set; }
+	    public Poslovni_partner Poslovni_partner { get; set; }
 	         
+		public void Generisi_izvestaj(String jezik)
+		{
+			// USER CODE STARTS HERE
+
+			return;
+			// USER CODE ENDS HERE
+		}
+		public void Proknjizi()
+		{
+			// USER CODE STARTS HERE
+
+			return;
+			// USER CODE ENDS HERE
+		}
 	}
 }

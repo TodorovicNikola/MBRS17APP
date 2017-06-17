@@ -1,3 +1,6 @@
+// DO NOT CHANGE THIS CODE
+// TEMPLATE model.ftl
+// AUTOMATICALLY GENERATED MODEL FOR Stavka_dokumenta
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -10,6 +13,11 @@ namespace WebApplication1.Models
 {
 	public class Stavka_dokumenta
 	{  
+		//Constraint :Redni_broj_pozitive -> self.Redni_broj>0
+		
+		//Constraint :Kolicina_pozitive -> self.Kolicina>0
+		
+	
 		[Key]
 		public int Id { get; set; }
 	         
@@ -35,12 +43,8 @@ namespace WebApplication1.Models
 	         
 		public double Ukupna_vrednost { get; set; }
 	         
-		[ForeignKey("Prijemni_dokument")]
-		[Required]
-	    public int Prijemni_dokument_ID { get; set; }
-	    
-	    [ForeignKey("Prijemni_dokument_ID")]
-	    public virtual Prijemni_dokument Prijemni_dokument { get; set; }
+	    [InverseProperty("Stavka_dokumenta")]
+	    public ICollection<Prijemni_dokument> Prijemni_dokument { get; set; }
 	         
 		[ForeignKey("Roba")]
 		[Required]
@@ -48,9 +52,7 @@ namespace WebApplication1.Models
 	    
 	    [ForeignKey("Roba_ID")]
 	    [InverseProperty("Stavke_dokumenata")]
-	    public virtual Roba Roba { get; set; }
-
-
+	    public Roba Roba { get; set; }
 	         
 	}
 }

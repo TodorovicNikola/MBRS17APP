@@ -1,3 +1,6 @@
+// DO NOT CHANGE THIS CODE
+// TEMPLATE model.ftl
+// AUTOMATICALLY GENERATED MODEL FOR Robna_kartica
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -10,6 +13,7 @@ namespace WebApplication1.Models
 {
 	public class Robna_kartica
 	{  
+	
 		[Key]
 		public int Id { get; set; }
 	         
@@ -32,7 +36,7 @@ namespace WebApplication1.Models
 		public double Ukupna_vrednost { get; set; }
 	         
 	    [InverseProperty("Robna_kartica")]
-	    public virtual ICollection<Analitika_magacinske_kartice> Analiticke_kartice { get; set; }
+	    public ICollection<Analitika_magacinske_kartice> Analiticke_kartice { get; set; }
 	         
 		[ForeignKey("Roba")]
 		[Required]
@@ -40,7 +44,7 @@ namespace WebApplication1.Models
 	    
 	    [ForeignKey("Roba_ID")]
 	    [InverseProperty("Robne_kartice")]
-	    public virtual Roba Roba { get; set; }
+	    public Roba Roba { get; set; }
 	         
 		[ForeignKey("Magacin")]
 		[Required]
@@ -48,7 +52,7 @@ namespace WebApplication1.Models
 	    
 	    [ForeignKey("Magacin_ID")]
 	    [InverseProperty("Robne_kartice")]
-	    public virtual Magacin Magacin { get; set; }
+	    public Magacin Magacin { get; set; }
 	         
 		[ForeignKey("Poslovna_godina")]
 		[Required]
@@ -56,7 +60,6 @@ namespace WebApplication1.Models
 	    
 	    [ForeignKey("Poslovna_godina_ID")]
 	    [InverseProperty("Robne_kartice")]
-	    public virtual Poslovna_godina Poslovna_godina { get; set; }
-	         
+	    public Poslovna_godina Poslovna_godina { get; set; }
 	}
 }

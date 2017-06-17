@@ -1,3 +1,6 @@
+// DO NOT CHANGE THIS CODE
+// TEMPLATE model.ftl
+// AUTOMATICALLY GENERATED MODEL FOR Roba
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -10,18 +13,21 @@ namespace WebApplication1.Models
 {
 	public class Roba
 	{  
+	
 		[Key]
 		public int Id { get; set; }
 	         
 		[Column(TypeName = "VARCHAR")]
 		[StringLength(128)]
+		[Required]
+		[Index]	 	
 		public String Naziv { get; set; }
 	         
 	    [InverseProperty("Roba")]
-	    public virtual ICollection<Robna_kartica> Robne_kartice { get; set; }
+	    public ICollection<Robna_kartica> Robne_kartice { get; set; }
 	         
 	    [InverseProperty("Roba")]
-	    public virtual ICollection<Stavka_dokumenta> Stavke_dokumenata { get; set; }
+	    public ICollection<Stavka_dokumenta> Stavke_dokumenata { get; set; }
 	         
 		[ForeignKey("Grupa_roba")]
 		[Required]
@@ -29,7 +35,7 @@ namespace WebApplication1.Models
 	    
 	    [ForeignKey("Grupa_roba_ID")]
 	    [InverseProperty("Roba_koja_joj_pripada")]
-	    public virtual Grupa_roba Grupa_roba { get; set; }
+	    public Grupa_roba Grupa_roba { get; set; }
 	         
 		[ForeignKey("Preduzece")]
 		[Required]
@@ -37,7 +43,7 @@ namespace WebApplication1.Models
 	    
 	    [ForeignKey("Preduzece_ID")]
 	    [InverseProperty("Roba")]
-	    public virtual Preduzece Preduzece { get; set; }
+	    public Preduzece Preduzece { get; set; }
 	         
 		[ForeignKey("Jedinica_mere")]
 		[Required]
@@ -45,7 +51,7 @@ namespace WebApplication1.Models
 	    
 	    [ForeignKey("Jedinica_mere_ID")]
 	    [InverseProperty("Roba_na_koju_se_odnosi")]
-	    public virtual Jedinica_mere Jedinica_mere { get; set; }
+	    public Jedinica_mere Jedinica_mere { get; set; }
 	         
 	}
 }

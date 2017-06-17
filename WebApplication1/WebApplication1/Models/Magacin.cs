@@ -1,3 +1,6 @@
+// DO NOT CHANGE THIS CODE
+// TEMPLATE model.ftl
+// AUTOMATICALLY GENERATED MODEL FOR Magacin
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -10,11 +13,14 @@ namespace WebApplication1.Models
 {
 	public class Magacin
 	{  
+	
 		[Key]
 		public int Id { get; set; }
 	         
 		[Column(TypeName = "VARCHAR")]
 		[StringLength(128)]
+		[Required]
+		[Index]	 	
 		public String Naziv { get; set; }
 	         
 		[Column(TypeName = "VARCHAR")]
@@ -23,13 +29,13 @@ namespace WebApplication1.Models
 		public String Adresa { get; set; }
 	         
 	    [InverseProperty("Pripada_magacinu")]
-	    public virtual ICollection<Prijemni_dokument> Prijemni_dokumenti_magacina { get; set; }
+	    public ICollection<Prijemni_dokument> Prijemni_dokumenti_magacina { get; set; }
 	         
 	    [InverseProperty("Magacin_u_dokumentu")]
-	    public virtual ICollection<Prijemni_dokument> Dokumenti_u_kojima_se_pominje { get; set; }
+	    public ICollection<Prijemni_dokument> Dokumenti_u_kojima_se_pominje { get; set; }
 	         
 	    [InverseProperty("Magacin")]
-	    public virtual ICollection<Robna_kartica> Robne_kartice { get; set; }
+	    public ICollection<Robna_kartica> Robne_kartice { get; set; }
 	         
 		[ForeignKey("Preduzece")]
 		[Required]
@@ -37,7 +43,7 @@ namespace WebApplication1.Models
 	    
 	    [ForeignKey("Preduzece_ID")]
 	    [InverseProperty("Magacini")]
-	    public virtual Preduzece Preduzece { get; set; }
+	    public Preduzece Preduzece { get; set; }
 	         
 		[ForeignKey("Mesto")]
 		[Required]
@@ -45,7 +51,7 @@ namespace WebApplication1.Models
 	    
 	    [ForeignKey("Mesto_ID")]
 	    [InverseProperty("Magacini_iz_mesta")]
-	    public virtual Mesto Mesto { get; set; }
+	    public Mesto Mesto { get; set; }
 	         
 	}
 }

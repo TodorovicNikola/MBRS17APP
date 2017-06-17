@@ -1,3 +1,6 @@
+// DO NOT CHANGE THIS CODE
+// TEMPLATE model.ftl
+// AUTOMATICALLY GENERATED MODEL FOR Poslovni_partner
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -10,6 +13,7 @@ namespace WebApplication1.Models
 {
 	public class Poslovni_partner
 	{  
+	
 		[Key]
 		public int Id { get; set; }
 	         
@@ -18,6 +22,8 @@ namespace WebApplication1.Models
 	         
 		[Column(TypeName = "VARCHAR")]
 		[StringLength(128)]
+		[Required]
+		[Index]	 	
 		public String Naziv { get; set; }
 	         
 		[Column(TypeName = "VARCHAR")]
@@ -37,10 +43,10 @@ namespace WebApplication1.Models
 		public String Adresa { get; set; }
 	         
 	    [InverseProperty("Poslovni_partner")]
-	    public virtual ICollection<Prijemni_dokument> Dokumenti_u_kojima_se_pominje { get; set; }
+	    public ICollection<Prijemni_dokument> Dokumenti_u_kojima_se_pominje { get; set; }
 	         
 	    [InverseProperty("Poslovni_partner")]
-	    public virtual ICollection<Faktura> Fakture { get; set; }
+	    public ICollection<Faktura> Fakture { get; set; }
 	         
 		[ForeignKey("Iz_mesta")]
 		[Required]
@@ -48,7 +54,7 @@ namespace WebApplication1.Models
 	    
 	    [ForeignKey("Iz_mesta_ID")]
 	    [InverseProperty("Poslovni_partneri_iz_mesta")]
-	    public virtual Mesto Iz_mesta { get; set; }
+	    public Mesto Iz_mesta { get; set; }
 	         
 	}
 }

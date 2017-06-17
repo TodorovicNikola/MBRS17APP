@@ -1,6 +1,5 @@
 namespace WebApplication1.Migrations
 {
-    using Models;
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Migrations;
@@ -15,17 +14,18 @@ namespace WebApplication1.Migrations
 
         protected override void Seed(WebApplication1.Models.AppDBContext context)
         {
-            context.Mesto.AddOrUpdate(
-                new Mesto { Naziv = "Subotica", Postanski_broj = "24000" }
-                );
+            //  This method will be called after migrating to the latest version.
 
-            context.SaveChanges();
-
-            context.Preduzece.AddOrUpdate(
-                new Preduzece { Naziv = "Mnogo dobro preduzece", PIB = "1231231231231", Maticni_broj = "1231231231231", Mesto_ID = 1, Adresa = "Frankopanska 1" }
-                );
-
-            context.SaveChanges();
+            //  You can use the DbSet<T>.AddOrUpdate() helper extension method 
+            //  to avoid creating duplicate seed data. E.g.
+            //
+            //    context.People.AddOrUpdate(
+            //      p => p.FullName,
+            //      new Person { FullName = "Andrew Peters" },
+            //      new Person { FullName = "Brice Lambson" },
+            //      new Person { FullName = "Rowan Miller" }
+            //    );
+            //
         }
     }
 }

@@ -6,58 +6,58 @@ using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
-using System.Web.Http.Description;
+using System.Web.Http.ModelBinding;
+using System.Web.Http.OData;
+using System.Web.Http.OData.Routing;
 using WebApplication1.Models;
 
 namespace WebApplication1.Controllers
 {
-    public class Robna_karticaController : ApiController
+    public class Robna_karticaController : ODataController
     {
         private AppDBContext db = new AppDBContext();
 
-        // GET: api/Robna_kartica
+        // GET: odata/Robna_kartica
+        [EnableQuery]
         public IQueryable<Robna_kartica> GetRobna_kartica()
         {
             return db.Robna_kartica;
         }
 
-        // GET: api/Robna_kartica/5
-        [ResponseType(typeof(Robna_kartica))]
-        public IHttpActionResult GetRobna_kartica(int id)
+        // GET: odata/Robna_kartica(5)
+        [EnableQuery]
+        public SingleResult<Robna_kartica> GetRobna_kartica([FromODataUri] int key)
         {
-            Robna_kartica robna_kartica = db. Robna_kartica.Find(id);
-            if (robna_kartica == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(robna_kartica);
+            return SingleResult.Create(db.Robna_kartica.Where(robna_kartica => robna_kartica.Id == key));
         }
 
-        // PUT: api/Robna_kartica/5
-        [ResponseType(typeof(void))]
-        public IHttpActionResult PutRobna_kartica(int id,  Robna_kartica robna_kartica)
+        // PUT: odata/Robna_kartica(5)
+        public async Task<IHttpActionResult> Put([FromODataUri] int key, Delta<Robna_kartica> patch)
         {
+            Validate(patch.GetEntity());
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != robna_kartica.Id)
+            Robna_kartica robna_kartica = await db.Robna_kartica.FindAsync(key);
+            if (robna_kartica == null)
             {
-                return BadRequest();
+                return NotFound();
             }
 
-            db.Entry(robna_kartica).State = EntityState.Modified;
+            patch.Put(robna_kartica);
 
             try
             {
-                db.SaveChanges();
+                await db.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!Robna_karticaExists(id))
+                if (!Robna_karticaExists(key))
                 {
                     return NotFound();
                 }
@@ -67,12 +67,11 @@ namespace WebApplication1.Controllers
                 }
             }
 
-            return StatusCode(HttpStatusCode.NoContent);
+            return Updated(robna_kartica);
         }
 
-        // POST: api/Robna_kartica
-        [ResponseType(typeof(Robna_kartica))]
-        public IHttpActionResult PostRobna_kartica(Robna_kartica robna_kartica)
+        // POST: odata/Robna_kartica
+        public async Task<IHttpActionResult> Post(Robna_kartica robna_kartica)
         {
             if (!ModelState.IsValid)
             {
@@ -80,25 +79,62 @@ namespace WebApplication1.Controllers
             }
 
             db.Robna_kartica.Add(robna_kartica);
-            db.SaveChanges();
+            await db.SaveChangesAsync();
 
-            return CreatedAtRoute("DefaultApi", new { id = robna_kartica.Id }, robna_kartica);
+            return Created(robna_kartica);
         }
 
-        // DELETE: api/Robna_kartica/5
-        [ResponseType(typeof(Robna_kartica))]
-        public IHttpActionResult DeleteRobna_kartica(int id)
+        // PATCH: odata/Robna_kartica(5)
+        [AcceptVerbs("PATCH", "MERGE")]
+        public async Task<IHttpActionResult> Patch([FromODataUri] int key, Delta<Robna_kartica> patch)
         {
-            Robna_kartica robna_kartica = db.Robna_kartica.Find(id);
+            Validate(patch.GetEntity());
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            Robna_kartica robna_kartica = await db.Robna_kartica.FindAsync(key);
+            if (robna_kartica == null)
+            {
+                return NotFound();
+            }
+
+            patch.Patch(robna_kartica);
+
+            try
+            {
+                await db.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!Robna_karticaExists(key))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return Updated(robna_kartica);
+        }
+
+        // DELETE: odata/Robna_kartica(5)
+        public async Task<IHttpActionResult> Delete([FromODataUri] int key)
+        {
+            Robna_kartica robna_kartica = await db.Robna_kartica.FindAsync(key);
             if (robna_kartica == null)
             {
                 return NotFound();
             }
 
             db.Robna_kartica.Remove(robna_kartica);
-            db.SaveChanges();
+            await db.SaveChangesAsync();
 
-            return Ok(robna_kartica);
+            return StatusCode(HttpStatusCode.NoContent);
         }
 
         protected override void Dispose(bool disposing)
@@ -110,9 +146,9 @@ namespace WebApplication1.Controllers
             base.Dispose(disposing);
         }
 
-        private bool Robna_karticaExists(int id)
+        private bool Robna_karticaExists(int key)
         {
-            return db.Robna_kartica.Count(e => e.Id == id) > 0;
+            return db.Robna_kartica.Count(e => e.Id == key) > 0;
         }
     }
 }

@@ -6,58 +6,58 @@ using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
-using System.Web.Http.Description;
+using System.Web.Http.ModelBinding;
+using System.Web.Http.OData;
+using System.Web.Http.OData.Routing;
 using WebApplication1.Models;
 
 namespace WebApplication1.Controllers
 {
-    public class Jedinica_mereController : ApiController
+    public class Jedinica_mereController : ODataController
     {
         private AppDBContext db = new AppDBContext();
 
-        // GET: api/Jedinica_mere
+        // GET: odata/Jedinica_mere
+        [EnableQuery]
         public IQueryable<Jedinica_mere> GetJedinica_mere()
         {
             return db.Jedinica_mere;
         }
 
-        // GET: api/Jedinica_mere/5
-        [ResponseType(typeof(Jedinica_mere))]
-        public IHttpActionResult GetJedinica_mere(int id)
+        // GET: odata/Jedinica_mere(5)
+        [EnableQuery]
+        public SingleResult<Jedinica_mere> GetJedinica_mere([FromODataUri] int key)
         {
-            Jedinica_mere jedinica_mere = db. Jedinica_mere.Find(id);
-            if (jedinica_mere == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(jedinica_mere);
+            return SingleResult.Create(db.Jedinica_mere.Where(jedinica_mere => jedinica_mere.Id == key));
         }
 
-        // PUT: api/Jedinica_mere/5
-        [ResponseType(typeof(void))]
-        public IHttpActionResult PutJedinica_mere(int id,  Jedinica_mere jedinica_mere)
+        // PUT: odata/Jedinica_mere(5)
+        public async Task<IHttpActionResult> Put([FromODataUri] int key, Delta<Jedinica_mere> patch)
         {
+            Validate(patch.GetEntity());
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != jedinica_mere.Id)
+            Jedinica_mere jedinica_mere = await db.Jedinica_mere.FindAsync(key);
+            if (jedinica_mere == null)
             {
-                return BadRequest();
+                return NotFound();
             }
 
-            db.Entry(jedinica_mere).State = EntityState.Modified;
+            patch.Put(jedinica_mere);
 
             try
             {
-                db.SaveChanges();
+                await db.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!Jedinica_mereExists(id))
+                if (!Jedinica_mereExists(key))
                 {
                     return NotFound();
                 }
@@ -67,12 +67,11 @@ namespace WebApplication1.Controllers
                 }
             }
 
-            return StatusCode(HttpStatusCode.NoContent);
+            return Updated(jedinica_mere);
         }
 
-        // POST: api/Jedinica_mere
-        [ResponseType(typeof(Jedinica_mere))]
-        public IHttpActionResult PostJedinica_mere(Jedinica_mere jedinica_mere)
+        // POST: odata/Jedinica_mere
+        public async Task<IHttpActionResult> Post(Jedinica_mere jedinica_mere)
         {
             if (!ModelState.IsValid)
             {
@@ -80,25 +79,62 @@ namespace WebApplication1.Controllers
             }
 
             db.Jedinica_mere.Add(jedinica_mere);
-            db.SaveChanges();
+            await db.SaveChangesAsync();
 
-            return CreatedAtRoute("DefaultApi", new { id = jedinica_mere.Id }, jedinica_mere);
+            return Created(jedinica_mere);
         }
 
-        // DELETE: api/Jedinica_mere/5
-        [ResponseType(typeof(Jedinica_mere))]
-        public IHttpActionResult DeleteJedinica_mere(int id)
+        // PATCH: odata/Jedinica_mere(5)
+        [AcceptVerbs("PATCH", "MERGE")]
+        public async Task<IHttpActionResult> Patch([FromODataUri] int key, Delta<Jedinica_mere> patch)
         {
-            Jedinica_mere jedinica_mere = db.Jedinica_mere.Find(id);
+            Validate(patch.GetEntity());
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            Jedinica_mere jedinica_mere = await db.Jedinica_mere.FindAsync(key);
+            if (jedinica_mere == null)
+            {
+                return NotFound();
+            }
+
+            patch.Patch(jedinica_mere);
+
+            try
+            {
+                await db.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!Jedinica_mereExists(key))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return Updated(jedinica_mere);
+        }
+
+        // DELETE: odata/Jedinica_mere(5)
+        public async Task<IHttpActionResult> Delete([FromODataUri] int key)
+        {
+            Jedinica_mere jedinica_mere = await db.Jedinica_mere.FindAsync(key);
             if (jedinica_mere == null)
             {
                 return NotFound();
             }
 
             db.Jedinica_mere.Remove(jedinica_mere);
-            db.SaveChanges();
+            await db.SaveChangesAsync();
 
-            return Ok(jedinica_mere);
+            return StatusCode(HttpStatusCode.NoContent);
         }
 
         protected override void Dispose(bool disposing)
@@ -110,9 +146,9 @@ namespace WebApplication1.Controllers
             base.Dispose(disposing);
         }
 
-        private bool Jedinica_mereExists(int id)
+        private bool Jedinica_mereExists(int key)
         {
-            return db.Jedinica_mere.Count(e => e.Id == id) > 0;
+            return db.Jedinica_mere.Count(e => e.Id == key) > 0;
         }
     }
 }

@@ -6,58 +6,58 @@ using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
-using System.Web.Http.Description;
+using System.Web.Http.ModelBinding;
+using System.Web.Http.OData;
+using System.Web.Http.OData.Routing;
 using WebApplication1.Models;
 
 namespace WebApplication1.Controllers
 {
-    public class Stavka_dokumentaController : ApiController
+    public class Stavka_dokumentaController : ODataController
     {
         private AppDBContext db = new AppDBContext();
 
-        // GET: api/Stavka_dokumenta
+        // GET: odata/Stavka_dokumenta
+        [EnableQuery]
         public IQueryable<Stavka_dokumenta> GetStavka_dokumenta()
         {
             return db.Stavka_dokumenta;
         }
 
-        // GET: api/Stavka_dokumenta/5
-        [ResponseType(typeof(Stavka_dokumenta))]
-        public IHttpActionResult GetStavka_dokumenta(int id)
+        // GET: odata/Stavka_dokumenta(5)
+        [EnableQuery]
+        public SingleResult<Stavka_dokumenta> GetStavka_dokumenta([FromODataUri] int key)
         {
-            Stavka_dokumenta stavka_dokumenta = db. Stavka_dokumenta.Find(id);
-            if (stavka_dokumenta == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(stavka_dokumenta);
+            return SingleResult.Create(db.Stavka_dokumenta.Where(stavka_dokumenta => stavka_dokumenta.Id == key));
         }
 
-        // PUT: api/Stavka_dokumenta/5
-        [ResponseType(typeof(void))]
-        public IHttpActionResult PutStavka_dokumenta(int id,  Stavka_dokumenta stavka_dokumenta)
+        // PUT: odata/Stavka_dokumenta(5)
+        public async Task<IHttpActionResult> Put([FromODataUri] int key, Delta<Stavka_dokumenta> patch)
         {
+            Validate(patch.GetEntity());
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != stavka_dokumenta.Id)
+            Stavka_dokumenta stavka_dokumenta = await db.Stavka_dokumenta.FindAsync(key);
+            if (stavka_dokumenta == null)
             {
-                return BadRequest();
+                return NotFound();
             }
 
-            db.Entry(stavka_dokumenta).State = EntityState.Modified;
+            patch.Put(stavka_dokumenta);
 
             try
             {
-                db.SaveChanges();
+                await db.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!Stavka_dokumentaExists(id))
+                if (!Stavka_dokumentaExists(key))
                 {
                     return NotFound();
                 }
@@ -67,12 +67,11 @@ namespace WebApplication1.Controllers
                 }
             }
 
-            return StatusCode(HttpStatusCode.NoContent);
+            return Updated(stavka_dokumenta);
         }
 
-        // POST: api/Stavka_dokumenta
-        [ResponseType(typeof(Stavka_dokumenta))]
-        public IHttpActionResult PostStavka_dokumenta(Stavka_dokumenta stavka_dokumenta)
+        // POST: odata/Stavka_dokumenta
+        public async Task<IHttpActionResult> Post(Stavka_dokumenta stavka_dokumenta)
         {
             if (!ModelState.IsValid)
             {
@@ -80,25 +79,62 @@ namespace WebApplication1.Controllers
             }
 
             db.Stavka_dokumenta.Add(stavka_dokumenta);
-            db.SaveChanges();
+            await db.SaveChangesAsync();
 
-            return CreatedAtRoute("DefaultApi", new { id = stavka_dokumenta.Id }, stavka_dokumenta);
+            return Created(stavka_dokumenta);
         }
 
-        // DELETE: api/Stavka_dokumenta/5
-        [ResponseType(typeof(Stavka_dokumenta))]
-        public IHttpActionResult DeleteStavka_dokumenta(int id)
+        // PATCH: odata/Stavka_dokumenta(5)
+        [AcceptVerbs("PATCH", "MERGE")]
+        public async Task<IHttpActionResult> Patch([FromODataUri] int key, Delta<Stavka_dokumenta> patch)
         {
-            Stavka_dokumenta stavka_dokumenta = db.Stavka_dokumenta.Find(id);
+            Validate(patch.GetEntity());
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            Stavka_dokumenta stavka_dokumenta = await db.Stavka_dokumenta.FindAsync(key);
+            if (stavka_dokumenta == null)
+            {
+                return NotFound();
+            }
+
+            patch.Patch(stavka_dokumenta);
+
+            try
+            {
+                await db.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!Stavka_dokumentaExists(key))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return Updated(stavka_dokumenta);
+        }
+
+        // DELETE: odata/Stavka_dokumenta(5)
+        public async Task<IHttpActionResult> Delete([FromODataUri] int key)
+        {
+            Stavka_dokumenta stavka_dokumenta = await db.Stavka_dokumenta.FindAsync(key);
             if (stavka_dokumenta == null)
             {
                 return NotFound();
             }
 
             db.Stavka_dokumenta.Remove(stavka_dokumenta);
-            db.SaveChanges();
+            await db.SaveChangesAsync();
 
-            return Ok(stavka_dokumenta);
+            return StatusCode(HttpStatusCode.NoContent);
         }
 
         protected override void Dispose(bool disposing)
@@ -110,9 +146,9 @@ namespace WebApplication1.Controllers
             base.Dispose(disposing);
         }
 
-        private bool Stavka_dokumentaExists(int id)
+        private bool Stavka_dokumentaExists(int key)
         {
-            return db.Stavka_dokumenta.Count(e => e.Id == id) > 0;
+            return db.Stavka_dokumenta.Count(e => e.Id == key) > 0;
         }
     }
 }

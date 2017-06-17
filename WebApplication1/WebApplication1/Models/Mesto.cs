@@ -1,3 +1,6 @@
+// DO NOT CHANGE THIS CODE
+// TEMPLATE model.ftl
+// AUTOMATICALLY GENERATED MODEL FOR Mesto
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -10,34 +13,30 @@ namespace WebApplication1.Models
 {
 	public class Mesto
 	{  
+	
 		[Key]
 		public int Id { get; set; }
 	         
 		[Column(TypeName = "VARCHAR")]
 		[StringLength(128)]
+		[Required]
+		[Index]	 	
 		public String Naziv { get; set; }
 	         
 		[Column(TypeName = "VARCHAR")]
 		[StringLength(128)]
+		[Required]
+		[Index(IsUnique=true)]
 		public String Postanski_broj { get; set; }
 	         
 	    [InverseProperty("Mesto")]
-	    public virtual ICollection<Magacin> Magacini_iz_mesta { get; set; }
+	    public ICollection<Magacin> Magacini_iz_mesta { get; set; }
 	         
 	    [InverseProperty("Iz_mesta")]
-	    public virtual ICollection<Poslovni_partner> Poslovni_partneri_iz_mesta { get; set; }
+	    public ICollection<Poslovni_partner> Poslovni_partneri_iz_mesta { get; set; }
 	         
 	    [InverseProperty("Mesto")]
-	    public virtual ICollection<Preduzece> Preduzeca_iz_mesta { get; set; }
-
-        public bool ValidateEntity()
-        {
-            if (this.Naziv != null && this.Naziv.StartsWith("ale"))
-            {
-                return false;
-            }
-            return true;
-        }
-
-    }
+	    public ICollection<Preduzece> Preduzeca_iz_mesta { get; set; }
+	         
+	}
 }

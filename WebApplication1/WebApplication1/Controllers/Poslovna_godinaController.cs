@@ -6,58 +6,58 @@ using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
-using System.Web.Http.Description;
+using System.Web.Http.ModelBinding;
+using System.Web.Http.OData;
+using System.Web.Http.OData.Routing;
 using WebApplication1.Models;
 
 namespace WebApplication1.Controllers
 {
-    public class Poslovna_godinaController : ApiController
+    public class Poslovna_godinaController : ODataController
     {
         private AppDBContext db = new AppDBContext();
 
-        // GET: api/Poslovna_godina
+        // GET: odata/Poslovna_godina
+        [EnableQuery]
         public IQueryable<Poslovna_godina> GetPoslovna_godina()
         {
             return db.Poslovna_godina;
         }
 
-        // GET: api/Poslovna_godina/5
-        [ResponseType(typeof(Poslovna_godina))]
-        public IHttpActionResult GetPoslovna_godina(int id)
+        // GET: odata/Poslovna_godina(5)
+        [EnableQuery]
+        public SingleResult<Poslovna_godina> GetPoslovna_godina([FromODataUri] int key)
         {
-            Poslovna_godina poslovna_godina = db. Poslovna_godina.Find(id);
-            if (poslovna_godina == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(poslovna_godina);
+            return SingleResult.Create(db.Poslovna_godina.Where(poslovna_godina => poslovna_godina.Id == key));
         }
 
-        // PUT: api/Poslovna_godina/5
-        [ResponseType(typeof(void))]
-        public IHttpActionResult PutPoslovna_godina(int id,  Poslovna_godina poslovna_godina)
+        // PUT: odata/Poslovna_godina(5)
+        public async Task<IHttpActionResult> Put([FromODataUri] int key, Delta<Poslovna_godina> patch)
         {
+            Validate(patch.GetEntity());
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != poslovna_godina.Id)
+            Poslovna_godina poslovna_godina = await db.Poslovna_godina.FindAsync(key);
+            if (poslovna_godina == null)
             {
-                return BadRequest();
+                return NotFound();
             }
 
-            db.Entry(poslovna_godina).State = EntityState.Modified;
+            patch.Put(poslovna_godina);
 
             try
             {
-                db.SaveChanges();
+                await db.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!Poslovna_godinaExists(id))
+                if (!Poslovna_godinaExists(key))
                 {
                     return NotFound();
                 }
@@ -67,12 +67,11 @@ namespace WebApplication1.Controllers
                 }
             }
 
-            return StatusCode(HttpStatusCode.NoContent);
+            return Updated(poslovna_godina);
         }
 
-        // POST: api/Poslovna_godina
-        [ResponseType(typeof(Poslovna_godina))]
-        public IHttpActionResult PostPoslovna_godina(Poslovna_godina poslovna_godina)
+        // POST: odata/Poslovna_godina
+        public async Task<IHttpActionResult> Post(Poslovna_godina poslovna_godina)
         {
             if (!ModelState.IsValid)
             {
@@ -80,25 +79,62 @@ namespace WebApplication1.Controllers
             }
 
             db.Poslovna_godina.Add(poslovna_godina);
-            db.SaveChanges();
+            await db.SaveChangesAsync();
 
-            return CreatedAtRoute("DefaultApi", new { id = poslovna_godina.Id }, poslovna_godina);
+            return Created(poslovna_godina);
         }
 
-        // DELETE: api/Poslovna_godina/5
-        [ResponseType(typeof(Poslovna_godina))]
-        public IHttpActionResult DeletePoslovna_godina(int id)
+        // PATCH: odata/Poslovna_godina(5)
+        [AcceptVerbs("PATCH", "MERGE")]
+        public async Task<IHttpActionResult> Patch([FromODataUri] int key, Delta<Poslovna_godina> patch)
         {
-            Poslovna_godina poslovna_godina = db.Poslovna_godina.Find(id);
+            Validate(patch.GetEntity());
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            Poslovna_godina poslovna_godina = await db.Poslovna_godina.FindAsync(key);
+            if (poslovna_godina == null)
+            {
+                return NotFound();
+            }
+
+            patch.Patch(poslovna_godina);
+
+            try
+            {
+                await db.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!Poslovna_godinaExists(key))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return Updated(poslovna_godina);
+        }
+
+        // DELETE: odata/Poslovna_godina(5)
+        public async Task<IHttpActionResult> Delete([FromODataUri] int key)
+        {
+            Poslovna_godina poslovna_godina = await db.Poslovna_godina.FindAsync(key);
             if (poslovna_godina == null)
             {
                 return NotFound();
             }
 
             db.Poslovna_godina.Remove(poslovna_godina);
-            db.SaveChanges();
+            await db.SaveChangesAsync();
 
-            return Ok(poslovna_godina);
+            return StatusCode(HttpStatusCode.NoContent);
         }
 
         protected override void Dispose(bool disposing)
@@ -110,9 +146,9 @@ namespace WebApplication1.Controllers
             base.Dispose(disposing);
         }
 
-        private bool Poslovna_godinaExists(int id)
+        private bool Poslovna_godinaExists(int key)
         {
-            return db.Poslovna_godina.Count(e => e.Id == id) > 0;
+            return db.Poslovna_godina.Count(e => e.Id == key) > 0;
         }
     }
 }

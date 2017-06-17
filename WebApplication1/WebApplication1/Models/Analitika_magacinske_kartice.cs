@@ -1,3 +1,6 @@
+// DO NOT CHANGE THIS CODE
+// TEMPLATE model.ftl
+// AUTOMATICALLY GENERATED MODEL FOR Analitika_magacinske_kartice
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -10,6 +13,7 @@ namespace WebApplication1.Models
 {
 	public class Analitika_magacinske_kartice
 	{  
+	
 		[Key]
 		public int Id { get; set; }
 	         
@@ -31,7 +35,7 @@ namespace WebApplication1.Models
 	    
 	    [ForeignKey("Robna_kartica_ID")]
 	    [InverseProperty("Analiticke_kartice")]
-	    public virtual Robna_kartica Robna_kartica { get; set; }
+	    public Robna_kartica Robna_kartica { get; set; }
 	         
 	}
 }

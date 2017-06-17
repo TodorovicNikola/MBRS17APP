@@ -1,3 +1,6 @@
+// DO NOT CHANGE THIS CODE
+// TEMPLATE model.ftl
+// AUTOMATICALLY GENERATED MODEL FOR Stopa_PDV_a
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -10,9 +13,11 @@ namespace WebApplication1.Models
 {
 	public class Stopa_PDV_a
 	{  
+	
 		[Key]
 		public int Id { get; set; }
 	         
+		[Required]
 		public double Stopa { get; set; }
 	         
 		[Required]
@@ -24,7 +29,7 @@ namespace WebApplication1.Models
 	    
 	    [ForeignKey("PDV_ID")]
 	    [InverseProperty("Stope_PDV_a")]
-	    public virtual PDV PDV { get; set; }
+	    public PDV PDV { get; set; }
 	         
 	}
 }

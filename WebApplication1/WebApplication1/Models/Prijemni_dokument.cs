@@ -1,3 +1,6 @@
+// DO NOT CHANGE THIS CODE
+// TEMPLATE model.ftl
+// AUTOMATICALLY GENERATED MODEL FOR Prijemni_dokument
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -10,6 +13,7 @@ namespace WebApplication1.Models
 {
 	public class Prijemni_dokument
 	{  
+	
 		[Key]
 		public int Id { get; set; }
 	         
@@ -29,8 +33,13 @@ namespace WebApplication1.Models
 	         
 		[Required]
 		public double Zavisni_troskovi { get; set; }
-	     
-	    public virtual ICollection<Stavka_dokumenta> Stavke_dokumenta { get; set; }
+	         
+		[ForeignKey("Stavka_dokumenta")]
+	    public int Stavka_dokumenta_ID { get; set; }
+	    
+	    [ForeignKey("Stavka_dokumenta_ID")]
+	    [InverseProperty("Prijemni_dokument")]
+	    public Stavka_dokumenta Stavka_dokumenta { get; set; }
 	         
 		[ForeignKey("Pripada_magacinu")]
 		[Required]
@@ -38,21 +47,28 @@ namespace WebApplication1.Models
 	    
 	    [ForeignKey("Pripada_magacinu_ID")]
 	    [InverseProperty("Prijemni_dokumenti_magacina")]
-	    public virtual Magacin Pripada_magacinu { get; set; }
+	    public Magacin Pripada_magacinu { get; set; }
 	         
 		[ForeignKey("Magacin_u_dokumentu")]
 	    public int Magacin_u_dokumentu_ID { get; set; }
 	    
 	    [ForeignKey("Magacin_u_dokumentu_ID")]
 	    [InverseProperty("Dokumenti_u_kojima_se_pominje")]
-	    public virtual Magacin Magacin_u_dokumentu { get; set; }
+	    public Magacin Magacin_u_dokumentu { get; set; }
 	         
 		[ForeignKey("Poslovni_partner")]
 	    public int Poslovni_partner_ID { get; set; }
 	    
 	    [ForeignKey("Poslovni_partner_ID")]
 	    [InverseProperty("Dokumenti_u_kojima_se_pominje")]
-	    public virtual Poslovni_partner Poslovni_partner { get; set; }
+	    public Poslovni_partner Poslovni_partner { get; set; }
 	         
+		public void Stampaj()
+		{
+			// USER CODE STARTS HERE
+
+			return;
+			// USER CODE ENDS HERE
+		}
 	}
 }

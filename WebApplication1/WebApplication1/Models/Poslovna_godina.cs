@@ -1,3 +1,6 @@
+// DO NOT CHANGE THIS CODE
+// TEMPLATE model.ftl
+// AUTOMATICALLY GENERATED MODEL FOR Poslovna_godina
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -10,18 +13,21 @@ namespace WebApplication1.Models
 {
 	public class Poslovna_godina
 	{  
+	
 		[Key]
 		public int Id { get; set; }
 	         
+		[Required]
+		[Index(IsUnique=true)]
 		public int Godina { get; set; }
 	         
 		public Boolean Zakljucena { get; set; }		
 	         
 	    [InverseProperty("Poslovna_godina")]
-	    public virtual ICollection<Robna_kartica> Robne_kartice { get; set; }
+	    public ICollection<Robna_kartica> Robne_kartice { get; set; }
 	         
 	    [InverseProperty("Poslovna_godina")]
-	    public virtual ICollection<Faktura> Fakture { get; set; }
+	    public ICollection<Faktura> Fakture { get; set; }
 	         
 		[ForeignKey("Preduzece")]
 		[Required]
@@ -29,7 +35,7 @@ namespace WebApplication1.Models
 	    
 	    [ForeignKey("Preduzece_ID")]
 	    [InverseProperty("Poslovne_godine")]
-	    public virtual Preduzece Preduzece { get; set; }
+	    public Preduzece Preduzece { get; set; }
 	         
 	}
 }
