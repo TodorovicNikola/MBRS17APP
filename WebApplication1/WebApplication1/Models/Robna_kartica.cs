@@ -33,7 +33,7 @@ namespace WebApplication1.Models
 	         
 		public double Ukupna_kolicina { get; set; }
 	         
-		public double Ukupna_vrednost { get; set; }
+		public double Ukupna_vrednost { get; set; }  
 	         
 	    [InverseProperty("Robna_kartica")]
 	    public ICollection<Analitika_magacinske_kartice> Analiticke_kartice { get; set; }
