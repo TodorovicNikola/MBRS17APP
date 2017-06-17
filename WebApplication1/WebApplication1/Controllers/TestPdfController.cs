@@ -9,11 +9,13 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Description;
 using WebApplication1.Models;
-using PdfSharp.Pdf;
+using PdfSharp;
 using System.IO;
 using System.Net.Http.Headers;
 using PdfSharp.Drawing;
-
+using MigraDoc;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
 
 namespace WebApplication1.Controllers
 {
@@ -91,7 +93,7 @@ namespace WebApplication1.Controllers
                 ms.Close();
             }
             */
-            var data = db.Roba;
+            /*var data = db.Roba;
             var statuscode = HttpStatusCode.OK;
 
             //String html = generateHtmlOutOfObject(data);
@@ -112,9 +114,61 @@ namespace WebApplication1.Controllers
             //ms.Close();
             //ms.Close();
             //ms.Flush();
+            */
+            //PDFCre
+            using (var ms = new MemoryStream())
+            {
 
-            
-            return response;
+                //Create an iTextSharp Document which is an abstraction of a PDF but **NOT** a PDF
+                using (var doc = new Document())
+                {
+
+                    //Create a writer that's bound to our PDF abstraction and our stream
+                    using (var writer = PdfWriter.GetInstance(doc, ms))
+                    {
+
+                        //Open the document for writing
+                        doc.Open();
+
+                        //Our sample HTML and CSS
+                        var example_html = @"<p>This <em>is </em><span class=""headline"" style=""text-decoration: underline;"">some</span> <strong>sample <em> text</em></strong><span style=""color: red;"">!!!</span></p>";
+                        var example_css = @".headline{font-size:200%}";
+
+                        /**************************************************
+                         * Example #1                                     *
+                         *                                                *
+                         * Use the built-in HTMLWorker to parse the HTML. *
+                         * Only inline CSS is supported.                  *
+                         * ************************************************/
+
+                        //Create a new HTMLWorker bound to our document
+                        using (var htmlWorker = new iTextSharp.text.html.simpleparser.HTMLWorker(doc))
+                        {
+
+                            //HTMLWorker doesn't read a string directly but instead needs a TextReader (which StringReader subclasses)
+                            using (var sr = new StringReader(example_html))
+                            {
+
+                                //Parse the HTML
+                                htmlWorker.Parse(sr);
+                            }
+                        }
+                        doc.Close();
+                        var response = Request.CreateResponse(HttpStatusCode.OK);
+                        Byte[] bytes;
+                        bytes = ms.ToArray();
+                        var msNew = new MemoryStream(bytes);
+                        response.Content = new StreamContent(msNew);
+                        response.Content.Headers.ContentType = new MediaTypeHeaderValue("application/pdf");
+                        response.Content.Headers.ContentLength = bytes.Length;
+                        //ms.Close();
+                        //ms.Flush();
+                        return response;
+                    }
+                }
+            }
+
+
         }
     }
 }

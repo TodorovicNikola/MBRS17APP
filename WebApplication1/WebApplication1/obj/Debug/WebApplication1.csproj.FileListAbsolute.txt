@@ -439,3 +439,17 @@ C:\newNikolaRepo\MBRS17APP\WebApplication1\WebApplication1\bin\NReco.dll
 C:\newNikolaRepo\MBRS17APP\WebApplication1\WebApplication1\bin\NReco.PdfGenerator.dll
 C:\newNikolaRepo\MBRS17APP\WebApplication1\WebApplication1\bin\NReco.xml
 C:\newNikolaRepo\MBRS17APP\WebApplication1\WebApplication1\bin\NReco.PdfGenerator.xml
+C:\newNikolaRepo\MBRS17APP\WebApplication1\WebApplication1\bin\epdfcreator.dll
+C:\newNikolaRepo\MBRS17APP\WebApplication1\WebApplication1\bin\itextsharp.dll
+C:\newNikolaRepo\MBRS17APP\WebApplication1\WebApplication1\bin\MigraDoc.DocumentObjectModel.dll
+C:\newNikolaRepo\MBRS17APP\WebApplication1\WebApplication1\bin\MigraDoc.Rendering.dll
+C:\newNikolaRepo\MBRS17APP\WebApplication1\WebApplication1\bin\MigraDoc.RtfRendering.dll
+C:\newNikolaRepo\MBRS17APP\WebApplication1\WebApplication1\bin\epdfcreator.xml
+C:\newNikolaRepo\MBRS17APP\WebApplication1\WebApplication1\bin\itextsharp.xml
+C:\newNikolaRepo\MBRS17APP\WebApplication1\WebApplication1\bin\MigraDoc.DocumentObjectModel.xml
+C:\newNikolaRepo\MBRS17APP\WebApplication1\WebApplication1\bin\MigraDoc.Rendering.xml
+C:\newNikolaRepo\MBRS17APP\WebApplication1\WebApplication1\bin\MigraDoc.RtfRendering.xml
+C:\newNikolaRepo\MBRS17APP\WebApplication1\WebApplication1\bin\de\MigraDoc.DocumentObjectModel.resources.dll
+C:\newNikolaRepo\MBRS17APP\WebApplication1\WebApplication1\bin\de\MigraDoc.Rendering.resources.dll
+C:\newNikolaRepo\MBRS17APP\WebApplication1\WebApplication1\bin\de\MigraDoc.RtfRendering.resources.dll
+C:\newNikolaRepo\MBRS17APP\WebApplication1\WebApplication1\bin\epengine.dll
