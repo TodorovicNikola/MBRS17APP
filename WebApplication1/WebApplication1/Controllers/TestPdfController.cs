@@ -92,12 +92,13 @@ namespace WebApplication1.Controllers
             }
             */
             var data = db.Roba;
+            var statuscode = HttpStatusCode.OK;
 
-            
             //String html = generateHtmlOutOfObject(data);
             var html = String.Format("<body>Hello world: {0}</body>",
-        //DateTime.Now);
-            var statuscode = HttpStatusCode.OK;
+        DateTime.Now);
+
+           
             var htmlToPdf = new NReco.PdfGenerator.HtmlToPdfConverter();
             var pdfBytes = htmlToPdf.GeneratePdf(html);
             var contentLength = pdfBytes.Length;
