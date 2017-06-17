@@ -435,3 +435,7 @@ C:\newNikolaRepo\MBRS17APP\WebApplication1\WebApplication1\obj\Debug\WebApplicat
 C:\newNikolaRepo\MBRS17APP\WebApplication1\WebApplication1\obj\Debug\WebApplication1.csproj.GenerateResource.Cache
 C:\newNikolaRepo\MBRS17APP\WebApplication1\WebApplication1\obj\Debug\WebApplication1.dll
 C:\newNikolaRepo\MBRS17APP\WebApplication1\WebApplication1\obj\Debug\WebApplication1.pdb
+C:\newNikolaRepo\MBRS17APP\WebApplication1\WebApplication1\bin\NReco.dll
+C:\newNikolaRepo\MBRS17APP\WebApplication1\WebApplication1\bin\NReco.PdfGenerator.dll
+C:\newNikolaRepo\MBRS17APP\WebApplication1\WebApplication1\bin\NReco.xml
+C:\newNikolaRepo\MBRS17APP\WebApplication1\WebApplication1\bin\NReco.PdfGenerator.xml

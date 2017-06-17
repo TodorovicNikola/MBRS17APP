@@ -14,6 +14,7 @@ using System.IO;
 using System.Net.Http.Headers;
 using PdfSharp.Drawing;
 
+
 namespace WebApplication1.Controllers
 {
     public class TestPdfController : ApiController
@@ -34,7 +35,7 @@ namespace WebApplication1.Controllers
         public static String generateHtmlOutOfObject(DbSet<Roba> tableData)
         {
             String html = "<body style='text-align:center;align:center'>";
-            html += "<h2>Izveštaj: " + "Roba</h2> </br>";
+            html += "<h2>Izvestaj: " + "Roba</h2> </br>";
             html += "<table border=1 style='width:100%;border-collapse: collapse;'>";
             int i = 0;
             foreach (var row in tableData)
@@ -69,7 +70,7 @@ namespace WebApplication1.Controllers
         [HttpGet]
         public HttpResponseMessage getPdf()
         {
-            var data = db.Roba;
+            /*var data = db.Roba;
 
             Byte[] res = null;
             var response = Request.CreateResponse(HttpStatusCode.OK);
@@ -89,7 +90,26 @@ namespace WebApplication1.Controllers
                 response.Content.Headers.ContentLength = contentLength;
                 ms.Close();
             }
+            */
+            var data = db.Roba;
+
+            
+            String html = generateHtmlOutOfObject(data);
+            //var htmlContent = String.Format("<body>Hello world: {0}</body>",
+        //DateTime.Now);
+            var statuscode = HttpStatusCode.OK;
+            var htmlToPdf = new NReco.PdfGenerator.HtmlToPdfConverter();
+            var pdfBytes = htmlToPdf.GeneratePdf(html);
+            var contentLength = pdfBytes.Length;
+            //res = ms.ToArray();
+            var response = Request.CreateResponse(HttpStatusCode.OK);
+            response = Request.CreateResponse(statuscode);
+            response.Content = new StreamContent(new MemoryStream(pdfBytes));
+            response.Content.Headers.ContentType = new MediaTypeHeaderValue("application/pdf");
+            response.Content.Headers.ContentLength = contentLength;
+            //ms.Close();
             return response;
         }
     }
 }
+ 
