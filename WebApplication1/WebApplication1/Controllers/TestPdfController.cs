@@ -18,17 +18,46 @@ namespace WebApplication1.Controllers
 {
     public class TestPdfController : ApiController
     {
-        private AppDBContext db = new AppDBContext();
+        private static AppDBContext db = new AppDBContext();
 
-
-        public static String generateHtmlOutOfObject(IQueryable tableData)
+        /*public static String dataToString(Object o)
         {
-            String html = "";
-
-            foreach (Mesto m in tableData)
+            if (o.GetType()!=typeof(String) && o.GetType()!=typeof(int) && o.GetType()!=typeof(double) && o.GetType()!=typeof(DateTime))
             {
-                html += "<tr><td>" + m.Naziv + "</td><td>" + m.Postanski_broj + "</td></tr>";
+                return "";
             }
+            return o.ToString();
+
+        }
+        */
+
+        public static String generateHtmlOutOfObject(DbSet<Roba> tableData)
+        {
+            String html = "<body style='text-align:center;align:center'>";
+            html += "<h2>Izveštaj: " + "Roba</h2> </br>";
+            html += "<table border=1 style='width:100%;border-collapse: collapse;'>";
+            int i = 0;
+            foreach (var row in tableData)
+            {
+                if (i++ == 0)
+                {
+                    html += "<tr>";
+                    html += "<td>" + "Id" + "</td>";
+                    html += "<td>" + "Naziv" + "</td>";
+                    html += "<td>" + "Grupa_roba" + "</td>";
+                    html += "<td>" + "Preduzece" + "</td>";
+                    html += "<td>" + "Jedinica_mere" + "</td>";
+                    html += "</tr>";
+                }
+                html += "<tr>";
+                html += "<td>" + row.Id + "</td>";
+                html += "<td>" + row.Naziv + "</td>";
+                html += row.Grupa_roba == null ? "<td></td>" : "<td>" + row.Grupa_roba.Naziv + "</td>";
+                html += row.Preduzece == null ? "<td></td>" : "<td>" + row.Preduzece.Naziv + "</td>";
+                html += row.Jedinica_mere == null ? "<td></td>" : "<td>" + row.Jedinica_mere.Oznaka + "</td>";
+                html += "</tr>";
+            }
+            html += "</table></body>";
             return html;
 
         }
@@ -40,50 +69,11 @@ namespace WebApplication1.Controllers
         [HttpGet]
         public HttpResponseMessage getPdf()
         {
-            /*    
-                PdfDocument doc = new PdfDocument();
-                var page= doc.AddPage();
-                MemoryStream memoryStream = new MemoryStream();
-                var response=Request.CreateResponse(HttpStatusCode.OK);
-
-                //content length for use in header
-                XGraphics gfx = XGraphics.FromPdfPage(page);
-                //200
-                //successfulResponse.Clear();
-                XSize size = gfx.PageSize;
-
-                XGraphicsPath path = new XGraphicsPath();
-
-                path.AddString("PDFshar", new XFontFamily("Verdana"), XFontStyle.BoldItalic, 10,new XRect(0, size.Height / 10, size.Width, 0), XStringFormats.Center);
-                path.AddString("PDsasaFshar", new XFontFamily("Verdana"), XFontStyle.BoldItalic, 10, new XRect(0, size.Height/2, size.Width, 0), XStringFormats.TopLeft);
-
-                gfx.DrawPath(new XPen(XColor.FromName("red")), path);
-
-                doc.Save(memoryStream, false);
-                var buffer = memoryStream.GetBuffer();
-                var contentLength = buffer.Length;
-                var statuscode = HttpStatusCode.OK;
-                response = Request.CreateResponse(statuscode);
-                response.Content = new StreamContent(new MemoryStream(buffer));
-                response.Content.Headers.ContentType = new MediaTypeHeaderValue("application/pdf");
-                response.Content.Headers.ContentLength = contentLength;
-                memoryStream.Close();
-                ContentDispositionHeaderValue contentDisposition = null;
-                if (ContentDispositionHeaderValue.TryParse("inline; filename=f", out contentDisposition))
-                {
-                    response.Content.Headers.ContentDisposition = contentDisposition;
-                }
-                return response;
-            }   
-
-          */
-            String html = "<body><table style='border:solid'><tr><td>sasasa</td></table></body>";
-
-            var mesto = db.Mesto;
+            var data = db.Roba;
 
             Byte[] res = null;
             var response = Request.CreateResponse(HttpStatusCode.OK);
-            //String html = generateHtmlOutOfObject(mesto);
+            String html = generateHtmlOutOfObject(data);
             using (MemoryStream ms = new MemoryStream())
             {
 
@@ -93,7 +83,6 @@ namespace WebApplication1.Controllers
                 var buffer = ms.GetBuffer();
                 var contentLength = buffer.Length;
                 res = ms.ToArray();
-
                 response = Request.CreateResponse(statuscode);
                 response.Content = new StreamContent(new MemoryStream(buffer));
                 response.Content.Headers.ContentType = new MediaTypeHeaderValue("application/pdf");
