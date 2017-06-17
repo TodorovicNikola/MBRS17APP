@@ -30,7 +30,7 @@ namespace WebApplication1.Controllers
             {
                 return Unauthorized();
             }
-            return Ok(db.Preduzece);
+            return Ok(db.Preduzece.AsQueryable());
         }
 
 		// GET: odata/Preduzece(5)
