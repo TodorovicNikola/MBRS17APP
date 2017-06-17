@@ -30,12 +30,20 @@ namespace WebApplication1.Controllers
         [EnableQuery]
         public SingleResult<Mesto> GetMesto([FromODataUri] int key)
         {
+            if (!LoginController.CheckAuthorizationForRequest(Request))
+            {
+               //return Unauthorized();
+            }
             return SingleResult.Create(db.Mesto.Where(mesto => mesto.Id == key));
         }
 
         // PUT: odata/Mesto(5)
         public async Task<IHttpActionResult> Put([FromODataUri] int key, Delta<Mesto> patch)
         {
+            if (!LoginController.CheckAuthorizationForRequest(Request))
+            {
+                return Unauthorized();
+            }
             Validate(patch.GetEntity());
 
             if (!ModelState.IsValid)
@@ -73,6 +81,10 @@ namespace WebApplication1.Controllers
         // POST: odata/Mesto
         public async Task<IHttpActionResult> Post(Mesto mesto)
         {
+            if (!LoginController.CheckAuthorizationForRequest(Request))
+            {
+                return Unauthorized();
+            }
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -88,6 +100,10 @@ namespace WebApplication1.Controllers
         [AcceptVerbs("PATCH", "MERGE")]
         public async Task<IHttpActionResult> Patch([FromODataUri] int key, Delta<Mesto> patch)
         {
+            if (!LoginController.CheckAuthorizationForRequest(Request))
+            {
+                return Unauthorized();
+            }
             Validate(patch.GetEntity());
 
             if (!ModelState.IsValid)
@@ -125,6 +141,10 @@ namespace WebApplication1.Controllers
         // DELETE: odata/Mesto(5)
         public async Task<IHttpActionResult> Delete([FromODataUri] int key)
         {
+            if (!LoginController.CheckAuthorizationForRequest(Request))
+            {
+                return Unauthorized();
+            }
             Mesto mesto = await db.Mesto.FindAsync(key);
             if (mesto == null)
             {
