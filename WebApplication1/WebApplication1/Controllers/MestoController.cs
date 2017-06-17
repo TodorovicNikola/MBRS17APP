@@ -12,6 +12,7 @@ using System.Web.Http.ModelBinding;
 using System.Web.Http.OData;
 using System.Web.Http.OData.Routing;
 using WebApplication1.Models;
+using System.Web.Http.Description;
 
 namespace WebApplication1.Controllers
 {
@@ -20,27 +21,37 @@ namespace WebApplication1.Controllers
         private AppDBContext db = new AppDBContext();
 
         // GET: odata/Mesto
+        
         [EnableQuery]
-        public IQueryable<Mesto> GetMesto()
-        {
-            return db.Mesto;
-        }
-
-        // GET: odata/Mesto(5)
-        [EnableQuery]
-        public SingleResult<Mesto> GetMesto([FromODataUri] int key)
+        [ResponseType(typeof(IQueryable<Mesto>))]
+        public async Task<IHttpActionResult> GetMesto()
         {
             if (!LoginController.CheckAuthorizationForRequest(Request))
             {
-               //return Unauthorized();
+                return Unauthorized();
             }
-            return SingleResult.Create(db.Mesto.Where(mesto => mesto.Id == key));
+            return Ok(db.Mesto);
         }
+
+		// GET: odata/Mesto(5)
+        [EnableQuery]
+        [ResponseType(typeof(Mesto))]
+        public async Task<IHttpActionResult> GetMesto([FromODataUri] int key)
+        {
+            if (!LoginController.CheckAuthorizationForRequest(Request))
+            {
+                return Unauthorized();
+            }
+            return Ok(db.Mesto.Where(mesto => mesto.Id == key));
+            //return SingleResult.Create(db.Mesto.Where(mesto => mesto.Id == key));
+        }
+
+      
 
         // PUT: odata/Mesto(5)
         public async Task<IHttpActionResult> Put([FromODataUri] int key, Delta<Mesto> patch)
         {
-            if (!LoginController.CheckAuthorizationForRequest(Request))
+        	if (!LoginController.CheckAuthorizationForRequest(Request))
             {
                 return Unauthorized();
             }
@@ -81,7 +92,7 @@ namespace WebApplication1.Controllers
         // POST: odata/Mesto
         public async Task<IHttpActionResult> Post(Mesto mesto)
         {
-            if (!LoginController.CheckAuthorizationForRequest(Request))
+        	if (!LoginController.CheckAuthorizationForRequest(Request))
             {
                 return Unauthorized();
             }
@@ -100,7 +111,7 @@ namespace WebApplication1.Controllers
         [AcceptVerbs("PATCH", "MERGE")]
         public async Task<IHttpActionResult> Patch([FromODataUri] int key, Delta<Mesto> patch)
         {
-            if (!LoginController.CheckAuthorizationForRequest(Request))
+        	if (!LoginController.CheckAuthorizationForRequest(Request))
             {
                 return Unauthorized();
             }
@@ -141,7 +152,7 @@ namespace WebApplication1.Controllers
         // DELETE: odata/Mesto(5)
         public async Task<IHttpActionResult> Delete([FromODataUri] int key)
         {
-            if (!LoginController.CheckAuthorizationForRequest(Request))
+        	if (!LoginController.CheckAuthorizationForRequest(Request))
             {
                 return Unauthorized();
             }

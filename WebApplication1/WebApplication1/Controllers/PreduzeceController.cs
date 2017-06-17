@@ -12,6 +12,7 @@ using System.Web.Http.ModelBinding;
 using System.Web.Http.OData;
 using System.Web.Http.OData.Routing;
 using WebApplication1.Models;
+using System.Web.Http.Description;
 
 namespace WebApplication1.Controllers
 {
@@ -20,22 +21,40 @@ namespace WebApplication1.Controllers
         private AppDBContext db = new AppDBContext();
 
         // GET: odata/Preduzece
+        
         [EnableQuery]
-        public IQueryable<Preduzece> GetPreduzece()
+        [ResponseType(typeof(IQueryable<Preduzece>))]
+        public async Task<IHttpActionResult> GetPreduzece()
         {
-            return db.Preduzece;
+            if (!LoginController.CheckAuthorizationForRequest(Request))
+            {
+                return Unauthorized();
+            }
+            return Ok(db.Preduzece);
         }
 
-        // GET: odata/Preduzece(5)
+		// GET: odata/Preduzece(5)
         [EnableQuery]
-        public SingleResult<Preduzece> GetPreduzece([FromODataUri] int key)
+        [ResponseType(typeof(Preduzece))]
+        public async Task<IHttpActionResult> GetPreduzece([FromODataUri] int key)
         {
-            return SingleResult.Create(db.Preduzece.Where(preduzece => preduzece.Id == key));
+            if (!LoginController.CheckAuthorizationForRequest(Request))
+            {
+                return Unauthorized();
+            }
+            return Ok(db.Preduzece.Where(preduzece => preduzece.Id == key));
+            //return SingleResult.Create(db.Mesto.Where(mesto => mesto.Id == key));
         }
+
+      
 
         // PUT: odata/Preduzece(5)
         public async Task<IHttpActionResult> Put([FromODataUri] int key, Delta<Preduzece> patch)
         {
+        	if (!LoginController.CheckAuthorizationForRequest(Request))
+            {
+                return Unauthorized();
+            }
             Validate(patch.GetEntity());
 
             if (!ModelState.IsValid)
@@ -73,6 +92,10 @@ namespace WebApplication1.Controllers
         // POST: odata/Preduzece
         public async Task<IHttpActionResult> Post(Preduzece preduzece)
         {
+        	if (!LoginController.CheckAuthorizationForRequest(Request))
+            {
+                return Unauthorized();
+            }
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -88,6 +111,10 @@ namespace WebApplication1.Controllers
         [AcceptVerbs("PATCH", "MERGE")]
         public async Task<IHttpActionResult> Patch([FromODataUri] int key, Delta<Preduzece> patch)
         {
+        	if (!LoginController.CheckAuthorizationForRequest(Request))
+            {
+                return Unauthorized();
+            }
             Validate(patch.GetEntity());
 
             if (!ModelState.IsValid)
@@ -125,6 +152,10 @@ namespace WebApplication1.Controllers
         // DELETE: odata/Preduzece(5)
         public async Task<IHttpActionResult> Delete([FromODataUri] int key)
         {
+        	if (!LoginController.CheckAuthorizationForRequest(Request))
+            {
+                return Unauthorized();
+            }
             Preduzece preduzece = await db.Preduzece.FindAsync(key);
             if (preduzece == null)
             {

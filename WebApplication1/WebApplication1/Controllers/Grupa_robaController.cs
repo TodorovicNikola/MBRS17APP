@@ -12,6 +12,7 @@ using System.Web.Http.ModelBinding;
 using System.Web.Http.OData;
 using System.Web.Http.OData.Routing;
 using WebApplication1.Models;
+using System.Web.Http.Description;
 
 namespace WebApplication1.Controllers
 {
@@ -20,22 +21,40 @@ namespace WebApplication1.Controllers
         private AppDBContext db = new AppDBContext();
 
         // GET: odata/Grupa_roba
+        
         [EnableQuery]
-        public IQueryable<Grupa_roba> GetGrupa_roba()
+        [ResponseType(typeof(IQueryable<Grupa_roba>))]
+        public async Task<IHttpActionResult> GetGrupa_roba()
         {
-            return db.Grupa_roba;
+            if (!LoginController.CheckAuthorizationForRequest(Request))
+            {
+                return Unauthorized();
+            }
+            return Ok(db.Grupa_roba);
         }
 
-        // GET: odata/Grupa_roba(5)
+		// GET: odata/Grupa_roba(5)
         [EnableQuery]
-        public SingleResult<Grupa_roba> GetGrupa_roba([FromODataUri] int key)
+        [ResponseType(typeof(Grupa_roba))]
+        public async Task<IHttpActionResult> GetGrupa_roba([FromODataUri] int key)
         {
-            return SingleResult.Create(db.Grupa_roba.Where(grupa_roba => grupa_roba.Id == key));
+            if (!LoginController.CheckAuthorizationForRequest(Request))
+            {
+                return Unauthorized();
+            }
+            return Ok(db.Grupa_roba.Where(grupa_roba => grupa_roba.Id == key));
+            //return SingleResult.Create(db.Mesto.Where(mesto => mesto.Id == key));
         }
+
+      
 
         // PUT: odata/Grupa_roba(5)
         public async Task<IHttpActionResult> Put([FromODataUri] int key, Delta<Grupa_roba> patch)
         {
+        	if (!LoginController.CheckAuthorizationForRequest(Request))
+            {
+                return Unauthorized();
+            }
             Validate(patch.GetEntity());
 
             if (!ModelState.IsValid)
@@ -73,6 +92,10 @@ namespace WebApplication1.Controllers
         // POST: odata/Grupa_roba
         public async Task<IHttpActionResult> Post(Grupa_roba grupa_roba)
         {
+        	if (!LoginController.CheckAuthorizationForRequest(Request))
+            {
+                return Unauthorized();
+            }
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -88,6 +111,10 @@ namespace WebApplication1.Controllers
         [AcceptVerbs("PATCH", "MERGE")]
         public async Task<IHttpActionResult> Patch([FromODataUri] int key, Delta<Grupa_roba> patch)
         {
+        	if (!LoginController.CheckAuthorizationForRequest(Request))
+            {
+                return Unauthorized();
+            }
             Validate(patch.GetEntity());
 
             if (!ModelState.IsValid)
@@ -125,6 +152,10 @@ namespace WebApplication1.Controllers
         // DELETE: odata/Grupa_roba(5)
         public async Task<IHttpActionResult> Delete([FromODataUri] int key)
         {
+        	if (!LoginController.CheckAuthorizationForRequest(Request))
+            {
+                return Unauthorized();
+            }
             Grupa_roba grupa_roba = await db.Grupa_roba.FindAsync(key);
             if (grupa_roba == null)
             {

@@ -12,6 +12,7 @@ using System.Web.Http.ModelBinding;
 using System.Web.Http.OData;
 using System.Web.Http.OData.Routing;
 using WebApplication1.Models;
+using System.Web.Http.Description;
 
 namespace WebApplication1.Controllers
 {
@@ -20,22 +21,40 @@ namespace WebApplication1.Controllers
         private AppDBContext db = new AppDBContext();
 
         // GET: odata/Robna_kartica
+        
         [EnableQuery]
-        public IQueryable<Robna_kartica> GetRobna_kartica()
+        [ResponseType(typeof(IQueryable<Robna_kartica>))]
+        public async Task<IHttpActionResult> GetRobna_kartica()
         {
-            return db.Robna_kartica;
+            if (!LoginController.CheckAuthorizationForRequest(Request))
+            {
+                return Unauthorized();
+            }
+            return Ok(db.Robna_kartica);
         }
 
-        // GET: odata/Robna_kartica(5)
+		// GET: odata/Robna_kartica(5)
         [EnableQuery]
-        public SingleResult<Robna_kartica> GetRobna_kartica([FromODataUri] int key)
+        [ResponseType(typeof(Robna_kartica))]
+        public async Task<IHttpActionResult> GetRobna_kartica([FromODataUri] int key)
         {
-            return SingleResult.Create(db.Robna_kartica.Where(robna_kartica => robna_kartica.Id == key));
+            if (!LoginController.CheckAuthorizationForRequest(Request))
+            {
+                return Unauthorized();
+            }
+            return Ok(db.Robna_kartica.Where(robna_kartica => robna_kartica.Id == key));
+            //return SingleResult.Create(db.Mesto.Where(mesto => mesto.Id == key));
         }
+
+      
 
         // PUT: odata/Robna_kartica(5)
         public async Task<IHttpActionResult> Put([FromODataUri] int key, Delta<Robna_kartica> patch)
         {
+        	if (!LoginController.CheckAuthorizationForRequest(Request))
+            {
+                return Unauthorized();
+            }
             Validate(patch.GetEntity());
 
             if (!ModelState.IsValid)
@@ -73,6 +92,10 @@ namespace WebApplication1.Controllers
         // POST: odata/Robna_kartica
         public async Task<IHttpActionResult> Post(Robna_kartica robna_kartica)
         {
+        	if (!LoginController.CheckAuthorizationForRequest(Request))
+            {
+                return Unauthorized();
+            }
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -88,6 +111,10 @@ namespace WebApplication1.Controllers
         [AcceptVerbs("PATCH", "MERGE")]
         public async Task<IHttpActionResult> Patch([FromODataUri] int key, Delta<Robna_kartica> patch)
         {
+        	if (!LoginController.CheckAuthorizationForRequest(Request))
+            {
+                return Unauthorized();
+            }
             Validate(patch.GetEntity());
 
             if (!ModelState.IsValid)
@@ -125,6 +152,10 @@ namespace WebApplication1.Controllers
         // DELETE: odata/Robna_kartica(5)
         public async Task<IHttpActionResult> Delete([FromODataUri] int key)
         {
+        	if (!LoginController.CheckAuthorizationForRequest(Request))
+            {
+                return Unauthorized();
+            }
             Robna_kartica robna_kartica = await db.Robna_kartica.FindAsync(key);
             if (robna_kartica == null)
             {

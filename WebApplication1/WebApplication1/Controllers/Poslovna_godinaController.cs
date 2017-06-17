@@ -12,6 +12,7 @@ using System.Web.Http.ModelBinding;
 using System.Web.Http.OData;
 using System.Web.Http.OData.Routing;
 using WebApplication1.Models;
+using System.Web.Http.Description;
 
 namespace WebApplication1.Controllers
 {
@@ -20,22 +21,40 @@ namespace WebApplication1.Controllers
         private AppDBContext db = new AppDBContext();
 
         // GET: odata/Poslovna_godina
+        
         [EnableQuery]
-        public IQueryable<Poslovna_godina> GetPoslovna_godina()
+        [ResponseType(typeof(IQueryable<Poslovna_godina>))]
+        public async Task<IHttpActionResult> GetPoslovna_godina()
         {
-            return db.Poslovna_godina;
+            if (!LoginController.CheckAuthorizationForRequest(Request))
+            {
+                return Unauthorized();
+            }
+            return Ok(db.Poslovna_godina);
         }
 
-        // GET: odata/Poslovna_godina(5)
+		// GET: odata/Poslovna_godina(5)
         [EnableQuery]
-        public SingleResult<Poslovna_godina> GetPoslovna_godina([FromODataUri] int key)
+        [ResponseType(typeof(Poslovna_godina))]
+        public async Task<IHttpActionResult> GetPoslovna_godina([FromODataUri] int key)
         {
-            return SingleResult.Create(db.Poslovna_godina.Where(poslovna_godina => poslovna_godina.Id == key));
+            if (!LoginController.CheckAuthorizationForRequest(Request))
+            {
+                return Unauthorized();
+            }
+            return Ok(db.Poslovna_godina.Where(poslovna_godina => poslovna_godina.Id == key));
+            //return SingleResult.Create(db.Mesto.Where(mesto => mesto.Id == key));
         }
+
+      
 
         // PUT: odata/Poslovna_godina(5)
         public async Task<IHttpActionResult> Put([FromODataUri] int key, Delta<Poslovna_godina> patch)
         {
+        	if (!LoginController.CheckAuthorizationForRequest(Request))
+            {
+                return Unauthorized();
+            }
             Validate(patch.GetEntity());
 
             if (!ModelState.IsValid)
@@ -73,6 +92,10 @@ namespace WebApplication1.Controllers
         // POST: odata/Poslovna_godina
         public async Task<IHttpActionResult> Post(Poslovna_godina poslovna_godina)
         {
+        	if (!LoginController.CheckAuthorizationForRequest(Request))
+            {
+                return Unauthorized();
+            }
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -88,6 +111,10 @@ namespace WebApplication1.Controllers
         [AcceptVerbs("PATCH", "MERGE")]
         public async Task<IHttpActionResult> Patch([FromODataUri] int key, Delta<Poslovna_godina> patch)
         {
+        	if (!LoginController.CheckAuthorizationForRequest(Request))
+            {
+                return Unauthorized();
+            }
             Validate(patch.GetEntity());
 
             if (!ModelState.IsValid)
@@ -125,6 +152,10 @@ namespace WebApplication1.Controllers
         // DELETE: odata/Poslovna_godina(5)
         public async Task<IHttpActionResult> Delete([FromODataUri] int key)
         {
+        	if (!LoginController.CheckAuthorizationForRequest(Request))
+            {
+                return Unauthorized();
+            }
             Poslovna_godina poslovna_godina = await db.Poslovna_godina.FindAsync(key);
             if (poslovna_godina == null)
             {

@@ -12,6 +12,7 @@ using System.Web.Http.ModelBinding;
 using System.Web.Http.OData;
 using System.Web.Http.OData.Routing;
 using WebApplication1.Models;
+using System.Web.Http.Description;
 
 namespace WebApplication1.Controllers
 {
@@ -20,22 +21,40 @@ namespace WebApplication1.Controllers
         private AppDBContext db = new AppDBContext();
 
         // GET: odata/Prijemni_dokument
+        
         [EnableQuery]
-        public IQueryable<Prijemni_dokument> GetPrijemni_dokument()
+        [ResponseType(typeof(IQueryable<Prijemni_dokument>))]
+        public async Task<IHttpActionResult> GetPrijemni_dokument()
         {
-            return db.Prijemni_dokument;
+            if (!LoginController.CheckAuthorizationForRequest(Request))
+            {
+                return Unauthorized();
+            }
+            return Ok(db.Prijemni_dokument);
         }
 
-        // GET: odata/Prijemni_dokument(5)
+		// GET: odata/Prijemni_dokument(5)
         [EnableQuery]
-        public SingleResult<Prijemni_dokument> GetPrijemni_dokument([FromODataUri] int key)
+        [ResponseType(typeof(Prijemni_dokument))]
+        public async Task<IHttpActionResult> GetPrijemni_dokument([FromODataUri] int key)
         {
-            return SingleResult.Create(db.Prijemni_dokument.Where(prijemni_dokument => prijemni_dokument.Id == key));
+            if (!LoginController.CheckAuthorizationForRequest(Request))
+            {
+                return Unauthorized();
+            }
+            return Ok(db.Prijemni_dokument.Where(prijemni_dokument => prijemni_dokument.Id == key));
+            //return SingleResult.Create(db.Mesto.Where(mesto => mesto.Id == key));
         }
+
+      
 
         // PUT: odata/Prijemni_dokument(5)
         public async Task<IHttpActionResult> Put([FromODataUri] int key, Delta<Prijemni_dokument> patch)
         {
+        	if (!LoginController.CheckAuthorizationForRequest(Request))
+            {
+                return Unauthorized();
+            }
             Validate(patch.GetEntity());
 
             if (!ModelState.IsValid)
@@ -73,6 +92,10 @@ namespace WebApplication1.Controllers
         // POST: odata/Prijemni_dokument
         public async Task<IHttpActionResult> Post(Prijemni_dokument prijemni_dokument)
         {
+        	if (!LoginController.CheckAuthorizationForRequest(Request))
+            {
+                return Unauthorized();
+            }
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -88,6 +111,10 @@ namespace WebApplication1.Controllers
         [AcceptVerbs("PATCH", "MERGE")]
         public async Task<IHttpActionResult> Patch([FromODataUri] int key, Delta<Prijemni_dokument> patch)
         {
+        	if (!LoginController.CheckAuthorizationForRequest(Request))
+            {
+                return Unauthorized();
+            }
             Validate(patch.GetEntity());
 
             if (!ModelState.IsValid)
@@ -125,6 +152,10 @@ namespace WebApplication1.Controllers
         // DELETE: odata/Prijemni_dokument(5)
         public async Task<IHttpActionResult> Delete([FromODataUri] int key)
         {
+        	if (!LoginController.CheckAuthorizationForRequest(Request))
+            {
+                return Unauthorized();
+            }
             Prijemni_dokument prijemni_dokument = await db.Prijemni_dokument.FindAsync(key);
             if (prijemni_dokument == null)
             {

@@ -12,6 +12,7 @@ using System.Web.Http.ModelBinding;
 using System.Web.Http.OData;
 using System.Web.Http.OData.Routing;
 using WebApplication1.Models;
+using System.Web.Http.Description;
 
 namespace WebApplication1.Controllers
 {
@@ -20,22 +21,40 @@ namespace WebApplication1.Controllers
         private AppDBContext db = new AppDBContext();
 
         // GET: odata/Magacin
+        
         [EnableQuery]
-        public IQueryable<Magacin> GetMagacin()
+        [ResponseType(typeof(IQueryable<Magacin>))]
+        public async Task<IHttpActionResult> GetMagacin()
         {
-            return db.Magacin;
+            if (!LoginController.CheckAuthorizationForRequest(Request))
+            {
+                return Unauthorized();
+            }
+            return Ok(db.Magacin);
         }
 
-        // GET: odata/Magacin(5)
+		// GET: odata/Magacin(5)
         [EnableQuery]
-        public SingleResult<Magacin> GetMagacin([FromODataUri] int key)
+        [ResponseType(typeof(Magacin))]
+        public async Task<IHttpActionResult> GetMagacin([FromODataUri] int key)
         {
-            return SingleResult.Create(db.Magacin.Where(magacin => magacin.Id == key));
+            if (!LoginController.CheckAuthorizationForRequest(Request))
+            {
+                return Unauthorized();
+            }
+            return Ok(db.Magacin.Where(magacin => magacin.Id == key));
+            //return SingleResult.Create(db.Mesto.Where(mesto => mesto.Id == key));
         }
+
+      
 
         // PUT: odata/Magacin(5)
         public async Task<IHttpActionResult> Put([FromODataUri] int key, Delta<Magacin> patch)
         {
+        	if (!LoginController.CheckAuthorizationForRequest(Request))
+            {
+                return Unauthorized();
+            }
             Validate(patch.GetEntity());
 
             if (!ModelState.IsValid)
@@ -73,6 +92,10 @@ namespace WebApplication1.Controllers
         // POST: odata/Magacin
         public async Task<IHttpActionResult> Post(Magacin magacin)
         {
+        	if (!LoginController.CheckAuthorizationForRequest(Request))
+            {
+                return Unauthorized();
+            }
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -88,6 +111,10 @@ namespace WebApplication1.Controllers
         [AcceptVerbs("PATCH", "MERGE")]
         public async Task<IHttpActionResult> Patch([FromODataUri] int key, Delta<Magacin> patch)
         {
+        	if (!LoginController.CheckAuthorizationForRequest(Request))
+            {
+                return Unauthorized();
+            }
             Validate(patch.GetEntity());
 
             if (!ModelState.IsValid)
@@ -125,6 +152,10 @@ namespace WebApplication1.Controllers
         // DELETE: odata/Magacin(5)
         public async Task<IHttpActionResult> Delete([FromODataUri] int key)
         {
+        	if (!LoginController.CheckAuthorizationForRequest(Request))
+            {
+                return Unauthorized();
+            }
             Magacin magacin = await db.Magacin.FindAsync(key);
             if (magacin == null)
             {

@@ -12,6 +12,7 @@ using System.Web.Http.ModelBinding;
 using System.Web.Http.OData;
 using System.Web.Http.OData.Routing;
 using WebApplication1.Models;
+using System.Web.Http.Description;
 
 namespace WebApplication1.Controllers
 {
@@ -20,22 +21,40 @@ namespace WebApplication1.Controllers
         private AppDBContext db = new AppDBContext();
 
         // GET: odata/Poslovni_partner
+        
         [EnableQuery]
-        public IQueryable<Poslovni_partner> GetPoslovni_partner()
+        [ResponseType(typeof(IQueryable<Poslovni_partner>))]
+        public async Task<IHttpActionResult> GetPoslovni_partner()
         {
-            return db.Poslovni_partner;
+            if (!LoginController.CheckAuthorizationForRequest(Request))
+            {
+                return Unauthorized();
+            }
+            return Ok(db.Poslovni_partner);
         }
 
-        // GET: odata/Poslovni_partner(5)
+		// GET: odata/Poslovni_partner(5)
         [EnableQuery]
-        public SingleResult<Poslovni_partner> GetPoslovni_partner([FromODataUri] int key)
+        [ResponseType(typeof(Poslovni_partner))]
+        public async Task<IHttpActionResult> GetPoslovni_partner([FromODataUri] int key)
         {
-            return SingleResult.Create(db.Poslovni_partner.Where(poslovni_partner => poslovni_partner.Id == key));
+            if (!LoginController.CheckAuthorizationForRequest(Request))
+            {
+                return Unauthorized();
+            }
+            return Ok(db.Poslovni_partner.Where(poslovni_partner => poslovni_partner.Id == key));
+            //return SingleResult.Create(db.Mesto.Where(mesto => mesto.Id == key));
         }
+
+      
 
         // PUT: odata/Poslovni_partner(5)
         public async Task<IHttpActionResult> Put([FromODataUri] int key, Delta<Poslovni_partner> patch)
         {
+        	if (!LoginController.CheckAuthorizationForRequest(Request))
+            {
+                return Unauthorized();
+            }
             Validate(patch.GetEntity());
 
             if (!ModelState.IsValid)
@@ -73,6 +92,10 @@ namespace WebApplication1.Controllers
         // POST: odata/Poslovni_partner
         public async Task<IHttpActionResult> Post(Poslovni_partner poslovni_partner)
         {
+        	if (!LoginController.CheckAuthorizationForRequest(Request))
+            {
+                return Unauthorized();
+            }
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -88,6 +111,10 @@ namespace WebApplication1.Controllers
         [AcceptVerbs("PATCH", "MERGE")]
         public async Task<IHttpActionResult> Patch([FromODataUri] int key, Delta<Poslovni_partner> patch)
         {
+        	if (!LoginController.CheckAuthorizationForRequest(Request))
+            {
+                return Unauthorized();
+            }
             Validate(patch.GetEntity());
 
             if (!ModelState.IsValid)
@@ -125,6 +152,10 @@ namespace WebApplication1.Controllers
         // DELETE: odata/Poslovni_partner(5)
         public async Task<IHttpActionResult> Delete([FromODataUri] int key)
         {
+        	if (!LoginController.CheckAuthorizationForRequest(Request))
+            {
+                return Unauthorized();
+            }
             Poslovni_partner poslovni_partner = await db.Poslovni_partner.FindAsync(key);
             if (poslovni_partner == null)
             {

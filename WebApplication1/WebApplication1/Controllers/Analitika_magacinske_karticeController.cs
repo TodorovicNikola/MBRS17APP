@@ -12,6 +12,7 @@ using System.Web.Http.ModelBinding;
 using System.Web.Http.OData;
 using System.Web.Http.OData.Routing;
 using WebApplication1.Models;
+using System.Web.Http.Description;
 
 namespace WebApplication1.Controllers
 {
@@ -20,22 +21,40 @@ namespace WebApplication1.Controllers
         private AppDBContext db = new AppDBContext();
 
         // GET: odata/Analitika_magacinske_kartice
+        
         [EnableQuery]
-        public IQueryable<Analitika_magacinske_kartice> GetAnalitika_magacinske_kartice()
+        [ResponseType(typeof(IQueryable<Analitika_magacinske_kartice>))]
+        public async Task<IHttpActionResult> GetAnalitika_magacinske_kartice()
         {
-            return db.Analitika_magacinske_kartice;
+            if (!LoginController.CheckAuthorizationForRequest(Request))
+            {
+                return Unauthorized();
+            }
+            return Ok(db.Analitika_magacinske_kartice);
         }
 
-        // GET: odata/Analitika_magacinske_kartice(5)
+		// GET: odata/Analitika_magacinske_kartice(5)
         [EnableQuery]
-        public SingleResult<Analitika_magacinske_kartice> GetAnalitika_magacinske_kartice([FromODataUri] int key)
+        [ResponseType(typeof(Analitika_magacinske_kartice))]
+        public async Task<IHttpActionResult> GetAnalitika_magacinske_kartice([FromODataUri] int key)
         {
-            return SingleResult.Create(db.Analitika_magacinske_kartice.Where(analitika_magacinske_kartice => analitika_magacinske_kartice.Id == key));
+            if (!LoginController.CheckAuthorizationForRequest(Request))
+            {
+                return Unauthorized();
+            }
+            return Ok(db.Analitika_magacinske_kartice.Where(analitika_magacinske_kartice => analitika_magacinske_kartice.Id == key));
+            //return SingleResult.Create(db.Mesto.Where(mesto => mesto.Id == key));
         }
+
+      
 
         // PUT: odata/Analitika_magacinske_kartice(5)
         public async Task<IHttpActionResult> Put([FromODataUri] int key, Delta<Analitika_magacinske_kartice> patch)
         {
+        	if (!LoginController.CheckAuthorizationForRequest(Request))
+            {
+                return Unauthorized();
+            }
             Validate(patch.GetEntity());
 
             if (!ModelState.IsValid)
@@ -73,6 +92,10 @@ namespace WebApplication1.Controllers
         // POST: odata/Analitika_magacinske_kartice
         public async Task<IHttpActionResult> Post(Analitika_magacinske_kartice analitika_magacinske_kartice)
         {
+        	if (!LoginController.CheckAuthorizationForRequest(Request))
+            {
+                return Unauthorized();
+            }
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -88,6 +111,10 @@ namespace WebApplication1.Controllers
         [AcceptVerbs("PATCH", "MERGE")]
         public async Task<IHttpActionResult> Patch([FromODataUri] int key, Delta<Analitika_magacinske_kartice> patch)
         {
+        	if (!LoginController.CheckAuthorizationForRequest(Request))
+            {
+                return Unauthorized();
+            }
             Validate(patch.GetEntity());
 
             if (!ModelState.IsValid)
@@ -125,6 +152,10 @@ namespace WebApplication1.Controllers
         // DELETE: odata/Analitika_magacinske_kartice(5)
         public async Task<IHttpActionResult> Delete([FromODataUri] int key)
         {
+        	if (!LoginController.CheckAuthorizationForRequest(Request))
+            {
+                return Unauthorized();
+            }
             Analitika_magacinske_kartice analitika_magacinske_kartice = await db.Analitika_magacinske_kartice.FindAsync(key);
             if (analitika_magacinske_kartice == null)
             {

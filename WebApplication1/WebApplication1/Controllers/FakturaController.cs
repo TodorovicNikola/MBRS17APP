@@ -12,6 +12,7 @@ using System.Web.Http.ModelBinding;
 using System.Web.Http.OData;
 using System.Web.Http.OData.Routing;
 using WebApplication1.Models;
+using System.Web.Http.Description;
 
 namespace WebApplication1.Controllers
 {
@@ -20,22 +21,40 @@ namespace WebApplication1.Controllers
         private AppDBContext db = new AppDBContext();
 
         // GET: odata/Faktura
+        
         [EnableQuery]
-        public IQueryable<Faktura> GetFaktura()
+        [ResponseType(typeof(IQueryable<Faktura>))]
+        public async Task<IHttpActionResult> GetFaktura()
         {
-            return db.Faktura;
+            if (!LoginController.CheckAuthorizationForRequest(Request))
+            {
+                return Unauthorized();
+            }
+            return Ok(db.Faktura);
         }
 
-        // GET: odata/Faktura(5)
+		// GET: odata/Faktura(5)
         [EnableQuery]
-        public SingleResult<Faktura> GetFaktura([FromODataUri] int key)
+        [ResponseType(typeof(Faktura))]
+        public async Task<IHttpActionResult> GetFaktura([FromODataUri] int key)
         {
-            return SingleResult.Create(db.Faktura.Where(faktura => faktura.Id == key));
+            if (!LoginController.CheckAuthorizationForRequest(Request))
+            {
+                return Unauthorized();
+            }
+            return Ok(db.Faktura.Where(faktura => faktura.Id == key));
+            //return SingleResult.Create(db.Mesto.Where(mesto => mesto.Id == key));
         }
+
+      
 
         // PUT: odata/Faktura(5)
         public async Task<IHttpActionResult> Put([FromODataUri] int key, Delta<Faktura> patch)
         {
+        	if (!LoginController.CheckAuthorizationForRequest(Request))
+            {
+                return Unauthorized();
+            }
             Validate(patch.GetEntity());
 
             if (!ModelState.IsValid)
@@ -73,6 +92,10 @@ namespace WebApplication1.Controllers
         // POST: odata/Faktura
         public async Task<IHttpActionResult> Post(Faktura faktura)
         {
+        	if (!LoginController.CheckAuthorizationForRequest(Request))
+            {
+                return Unauthorized();
+            }
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -88,6 +111,10 @@ namespace WebApplication1.Controllers
         [AcceptVerbs("PATCH", "MERGE")]
         public async Task<IHttpActionResult> Patch([FromODataUri] int key, Delta<Faktura> patch)
         {
+        	if (!LoginController.CheckAuthorizationForRequest(Request))
+            {
+                return Unauthorized();
+            }
             Validate(patch.GetEntity());
 
             if (!ModelState.IsValid)
@@ -125,6 +152,10 @@ namespace WebApplication1.Controllers
         // DELETE: odata/Faktura(5)
         public async Task<IHttpActionResult> Delete([FromODataUri] int key)
         {
+        	if (!LoginController.CheckAuthorizationForRequest(Request))
+            {
+                return Unauthorized();
+            }
             Faktura faktura = await db.Faktura.FindAsync(key);
             if (faktura == null)
             {
