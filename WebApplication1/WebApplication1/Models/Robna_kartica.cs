@@ -33,7 +33,7 @@ namespace WebApplication1.Models
 	         
 		public double Ukupna_kolicina { get; set; }
 	         
-		public double Ukupna_vrednost { get; set; }  
+		public double Ukupna_vrednost { get; set; }
 	         
 	    [InverseProperty("Robna_kartica")]
 	    public ICollection<Analitika_magacinske_kartice> Analiticke_kartice { get; set; }
@@ -61,5 +61,16 @@ namespace WebApplication1.Models
 	    [ForeignKey("Poslovna_godina_ID")]
 	    [InverseProperty("Robne_kartice")]
 	    public Poslovna_godina Poslovna_godina { get; set; }
+	         
+		[Timestamp]
+    	public byte[] RowVersion { get; set; }
+	
+		public String Generisi_statistiku(DateTime od_kad, DateTime do_kad)
+		{
+			// USER CODE STARTS HERE
+
+			return null;
+			// USER CODE ENDS HERE
+		}
 	}
 }

@@ -127,7 +127,7 @@ namespace WebApplication1.Controllers
                         doc.Open();
 
                         var data = db.Roba;
-                        String html = generateHtmlOutOfObject(data);
+                        String html = "<body>asada</body>";
                         using (var htmlWorker = new iTextSharp.text.html.simpleparser.HTMLWorker(doc))
                         {
 

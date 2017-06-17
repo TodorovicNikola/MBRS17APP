@@ -53,6 +53,9 @@ namespace WebApplication1.Models
 	    [InverseProperty("Fakture")]
 	    public Poslovni_partner Poslovni_partner { get; set; }
 	         
+		[Timestamp]
+    	public byte[] RowVersion { get; set; }
+	
 		public void Generisi_izvestaj(String jezik)
 		{
 			// USER CODE STARTS HERE
