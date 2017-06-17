@@ -93,10 +93,8 @@ namespace WebApplication1.Controllers
                 ms.Close();
             }
             */
-            /*var data = db.Roba;
-            var statuscode = HttpStatusCode.OK;
-
-            //String html = generateHtmlOutOfObject(data);
+            /*
+            
             var html = String.Format("<body>Hello world: {0}</body>",
         DateTime.Now);
 
@@ -123,30 +121,18 @@ namespace WebApplication1.Controllers
                 using (var doc = new Document())
                 {
 
-                    //Create a writer that's bound to our PDF abstraction and our stream
                     using (var writer = PdfWriter.GetInstance(doc, ms))
                     {
 
-                        //Open the document for writing
                         doc.Open();
 
-                        //Our sample HTML and CSS
-                        var example_html = @"<p>This <em>is </em><span class=""headline"" style=""text-decoration: underline;"">some</span> <strong>sample <em> text</em></strong><span style=""color: red;"">!!!</span></p>";
-                        var example_css = @".headline{font-size:200%}";
-
-                        /**************************************************
-                         * Example #1                                     *
-                         *                                                *
-                         * Use the built-in HTMLWorker to parse the HTML. *
-                         * Only inline CSS is supported.                  *
-                         * ************************************************/
-
-                        //Create a new HTMLWorker bound to our document
+                        var data = db.Roba;
+                        String html = generateHtmlOutOfObject(data);
                         using (var htmlWorker = new iTextSharp.text.html.simpleparser.HTMLWorker(doc))
                         {
 
                             //HTMLWorker doesn't read a string directly but instead needs a TextReader (which StringReader subclasses)
-                            using (var sr = new StringReader(example_html))
+                            using (var sr = new StringReader(html))
                             {
 
                                 //Parse the HTML
@@ -154,6 +140,7 @@ namespace WebApplication1.Controllers
                             }
                         }
                         doc.Close();
+                      
                         var response = Request.CreateResponse(HttpStatusCode.OK);
                         Byte[] bytes;
                         bytes = ms.ToArray();
@@ -161,9 +148,10 @@ namespace WebApplication1.Controllers
                         response.Content = new StreamContent(msNew);
                         response.Content.Headers.ContentType = new MediaTypeHeaderValue("application/pdf");
                         response.Content.Headers.ContentLength = bytes.Length;
-                        //ms.Close();
-                        //ms.Flush();
+                        ms.Close();
+                        ms.Flush();
                         return response;
+
                     }
                 }
             }
