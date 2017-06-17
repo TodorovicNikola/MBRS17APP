@@ -105,10 +105,15 @@ namespace WebApplication1.Controllers
             //res = ms.ToArray();
             var response = Request.CreateResponse(HttpStatusCode.OK);
             response = Request.CreateResponse(statuscode);
-            response.Content = new StreamContent(new MemoryStream(pdfBytes));
+            var ms = new MemoryStream(pdfBytes);
+            response.Content = new StreamContent(ms);
             response.Content.Headers.ContentType = new MediaTypeHeaderValue("application/pdf");
             response.Content.Headers.ContentLength = contentLength;
             //ms.Close();
+            //ms.Close();
+            //ms.Flush();
+
+            
             return response;
         }
     }
