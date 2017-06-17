@@ -94,8 +94,8 @@ namespace WebApplication1.Controllers
             var data = db.Roba;
 
             
-            String html = generateHtmlOutOfObject(data);
-            //var htmlContent = String.Format("<body>Hello world: {0}</body>",
+            //String html = generateHtmlOutOfObject(data);
+            var html = String.Format("<body>Hello world: {0}</body>",
         //DateTime.Now);
             var statuscode = HttpStatusCode.OK;
             var htmlToPdf = new NReco.PdfGenerator.HtmlToPdfConverter();
