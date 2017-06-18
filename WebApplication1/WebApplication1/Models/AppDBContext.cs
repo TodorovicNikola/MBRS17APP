@@ -12,7 +12,7 @@ namespace WebApplication1.Models
     {
         public AppDBContext() : base("DefaultDB") { }
 
-		public virtual DbSet<Jedinica_mere> Jedinica_mere { get; set; }
+				public virtual DbSet<Jedinica_mere> Jedinica_mere { get; set; }
 		public virtual DbSet<Stopa_PDV_a> Stopa_PDV_a { get; set; }
 		public virtual DbSet<Analitika_magacinske_kartice> Analitika_magacinske_kartice { get; set; }
 		public virtual DbSet<Poslovni_partner> Poslovni_partner { get; set; }

@@ -19,12 +19,7 @@ using System.Threading.Tasks;
 namespace WebApplication1.Models
 {
 	public partial class Stavka_dokumenta
-	{  
-		//Constraint :Redni_broj_pozitive -> self.Redni_broj>0
-		
-		//Constraint :Kolicina_pozitive -> self.Kolicina>0
-		
-	
+	{
 		[Key]
 		public int Id { get; set; }
 	         

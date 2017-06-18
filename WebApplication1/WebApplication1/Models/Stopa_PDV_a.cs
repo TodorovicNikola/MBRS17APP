@@ -19,8 +19,7 @@ using System.Threading.Tasks;
 namespace WebApplication1.Models
 {
 	public partial class Stopa_PDV_a
-	{  
-	
+	{
 		[Key]
 		public int Id { get; set; }
 	         

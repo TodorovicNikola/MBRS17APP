@@ -19,8 +19,7 @@ using System.Threading.Tasks;
 namespace WebApplication1.Models
 {
 	public partial class Prijemni_dokument
-	{  
-	
+	{
 		public int Redni_broj { get; set; }
 	         
 		[Key]

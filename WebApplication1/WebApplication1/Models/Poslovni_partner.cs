@@ -19,8 +19,7 @@ using System.Threading.Tasks;
 namespace WebApplication1.Models
 {
 	public partial class Poslovni_partner
-	{  
-	
+	{
 		[Key]
 		public int Id { get; set; }
 	         

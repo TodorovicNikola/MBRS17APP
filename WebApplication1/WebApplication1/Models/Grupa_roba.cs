@@ -19,8 +19,7 @@ using System.Threading.Tasks;
 namespace WebApplication1.Models
 {
 	public partial class Grupa_roba
-	{  
-	
+	{
 		[Key]
 		public int Id { get; set; }
 	         

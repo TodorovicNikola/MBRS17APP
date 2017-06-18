@@ -19,8 +19,7 @@ using System.Threading.Tasks;
 namespace WebApplication1.Models
 {
 	public partial class Magacin
-	{  
-	
+	{
 		[Key]
 		public int Id { get; set; }
 	         

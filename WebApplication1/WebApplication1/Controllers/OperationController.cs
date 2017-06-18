@@ -1,3 +1,5 @@
+// DO NOT CHANGE THIS CODE
+// TEMPLATE operations.ftl
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -22,7 +24,7 @@ namespace WebApplication1.Controllers
     			 public static String generateHtmlOutOfFaktura(DbSet<Faktura> tableData)
         {
             String html = "<body style='text-align:center;align:center'>";
-            html+="<h2>Izveštaj: "+"Faktura</h2> </br>";
+            html+="<h2>Izveï¿½taj: "+"Faktura</h2> </br>";
             html += "<table border=1 style='width:100%;border-collapse: collapse;'>";
             int i = 0;
             foreach (var row in tableData)
@@ -106,29 +108,28 @@ namespace WebApplication1.Controllers
         }
         
         [ResponseType(typeof(Faktura))]
-        [HttpPost]
         [Route("api/operations/Proknjizi")]
+        [HttpPost]
         public IHttpActionResult Proknjizi(Faktura faktura)
         {
-            /*
-            TODO: IMPLEMENT METHOD
-            */
-            
-            return Ok();
+            // USER CODE STARTS HERE
+
+			return Ok();
+			// USER CODE ENDS HERE
         }
         
         [ResponseType(typeof(Robna_kartica))]
-        [HttpPost]
         [Route("api/operations/Generisi_statistiku")]
+        [HttpPost]
         public IHttpActionResult Generisi_statistiku(Robna_kartica robna_kartica)
         {
-            /*
-            TODO: IMPLEMENT METHOD
-            */
-            
-            return Ok();
+            // USER CODE STARTS HERE
+
+			return Ok();
+			// USER CODE ENDS HERE
         }
+        
 
+        
     }
-
 }
