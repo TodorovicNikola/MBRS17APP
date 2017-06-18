@@ -251,6 +251,7 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\OperationController.cs" />
+    <Compile Include="Controllers\Operation_Manual_Controller.cs" />
     <Compile Include="Controllers\RobaController.cs" />
     <Compile Include="Controllers\TestPdfController.cs" />
     <Compile Include="Controllers\Analitika_magacinske_karticeController.cs" />
@@ -283,6 +284,7 @@
     <Compile Include="Models\AppDBContext.cs" />
     <Compile Include="Models\Faktura.cs" />
     <Compile Include="Models\Faktura_constraints.cs" />
+    <Compile Include="Models\Faktura_manual.cs" />
     <Compile Include="Models\Grupa_roba.cs" />
     <Compile Include="Models\Grupa_roba_constraints.cs" />
     <Compile Include="Models\Jedinica_mere.cs" />
